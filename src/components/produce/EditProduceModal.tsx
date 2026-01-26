@@ -362,6 +362,7 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
                 <Form.Control
                   type="number"
                   step={0.5}
+                  min="0"
                   {...register('restockThreshold')}
                   placeholder="e.g., 0.5"
                   isInvalid={!!errors.restockThreshold}
@@ -446,7 +447,10 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
               <Button
                 type="button"
                 variant="warning"
-                onClick={() => reset()}
+                onClick={() => {
+                  const ok = window.confirm('Are you sure you want to reset?');
+                  if (ok) reset();
+                }}
                 className="btn-reset"
               >
                 Reset
