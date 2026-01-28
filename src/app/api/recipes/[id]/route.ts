@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 
-type RouteParams = {
-  params: { id: string };
+type RouteContext = {
+  params: Promise<{ id: string }>;
 };
 
 export async function DELETE(
-  request: Request,
-  { params }: RouteParams,
+  _request: Request,
+  ctx: RouteContext,
 ) {
   try {
     const session = await getServerSession();
@@ -21,7 +21,9 @@ export async function DELETE(
       );
     }
 
-    const recipeId = Number(params.id);
+    const { id } = await ctx.params;
+    const recipeId = Number(id);
+
     if (Number.isNaN(recipeId)) {
       return NextResponse.json(
         { error: 'Invalid recipe id' },

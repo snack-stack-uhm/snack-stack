@@ -1,17 +1,23 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
+export async function PATCH(request: Request, ctx: RouteContext) {
   try {
-    const id = Number(params.id);
+    const { id } = await ctx.params;
+    const produceId = Number(id);
+
     const { restockTrigger, customThreshold } = await request.json();
 
-    const updateData: any = {};
-    if (restockTrigger) updateData.restockTrigger = restockTrigger;
-    if (customThreshold !== undefined) updateData.customThreshold = parseFloat(customThreshold);
+    const updateData: Record<string, unknown> = {};
+    if (restockTrigger !== undefined) updateData.restockTrigger = restockTrigger;
+    if (customThreshold !== undefined) updateData.customThreshold = Number(customThreshold);
 
     const updatedProduce = await prisma.produce.update({
-      where: { id },
+      where: { id: produceId },
       data: updateData,
     });
 
