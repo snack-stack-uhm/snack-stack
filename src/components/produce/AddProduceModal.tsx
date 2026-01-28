@@ -426,9 +426,10 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
           <Row className="mb-3">
             <Col xs={12}>
               <Form.Group>
-                <Form.Label className="mb-0">Restock At</Form.Label>
+                <Form.Label className="mb-0">Restock Threshold</Form.Label>
                 <Form.Control
                   type="number"
+                  min={0}
                   step={0.5}
                   placeholder="e.g., 0.5"
                   isInvalid={!!errors.restockThreshold}
