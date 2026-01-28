@@ -97,7 +97,7 @@ export default function ShoppingListView({ initialShoppingLists }: ShoppingListV
             <Row>
               {filteredLists.map((list) => (
                 <Col key={list.id} md={6} className="mb-4">
-                  <ShoppingListCard shoppingList={list} owner={session?.user?.email ?? ""} />
+                  <ShoppingListCard shoppingList={list} owner={session?.user?.email ?? ''} />
                 </Col>
               ))}
             </Row>

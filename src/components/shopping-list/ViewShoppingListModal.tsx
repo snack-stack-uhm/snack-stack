@@ -90,8 +90,8 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList, owner }: ViewShoppi
 
   const updateItemQuantity = async (itemId: number, newQty: number) => {
     await fetch(`/api/shopping-list-item/${itemId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ quantity: newQty }),
     });
   };
@@ -263,7 +263,7 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList, owner }: ViewShoppi
           setItems((prev) =>
             prev
               .map((it) => (it.id === itemId ? { ...it, quantity: newQty } : it))
-              .filter((it) => it.quantity > 0)
+              .filter((it) => it.quantity > 0),
           );
 
           if (newQty <= 0) {

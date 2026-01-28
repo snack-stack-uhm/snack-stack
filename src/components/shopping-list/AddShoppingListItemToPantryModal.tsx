@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
-import swal from "sweetalert";
-import { upsertProduceSet } from "@/lib/dbActions";
+import { useEffect, useState } from 'react';
+import { Button, Modal, Form } from 'react-bootstrap';
+import swal from 'sweetalert';
+import { upsertProduceSet } from '@/lib/dbActions';
 
 type ShoppingListItem = {
   id: number;
@@ -18,7 +18,7 @@ interface Props {
   onHide: () => void;
   item: ShoppingListItem | null;
   owner: string;
-  onMoved?: (itemId: number, movedQty: number) => void; // NEW
+  onMoved: (itemId: number, movedQty: number) => void;
 }
 
 export default function AddShoppingListItemToPantryModal({
@@ -29,10 +29,10 @@ export default function AddShoppingListItemToPantryModal({
   onMoved,
 }: Props) {
   const [locations, setLocations] = useState<string[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState('');
   const [saving, setSaving] = useState(false);
   const [moveQty, setMoveQty] = useState(1);
-  const [qtyError, setQtyError] = useState<string | null>(null);
+  const [, setQtyError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!show) return;
@@ -47,14 +47,13 @@ export default function AddShoppingListItemToPantryModal({
 
       if (!res.ok) {
         setLocations([]);
-        setSelectedLocation("");
-      return;
+        setSelectedLocation('');
+        return;
       }
 
       const data = (await res.json()) as string[];
       setLocations(data);
-      setSelectedLocation((prev) => prev || data[0] || "");
-
+      setSelectedLocation((prev) => prev || data[0] || '');
     })();
   }, [show, owner, item?.id, item?.quantity]);
 
@@ -64,51 +63,51 @@ export default function AddShoppingListItemToPantryModal({
     return null;
   };
 
-const handleAdd = async () => {
-  if (!item || !selectedLocation || !owner) return;
+  const handleAdd = async () => {
+    if (!item || !selectedLocation || !owner) return;
 
-  const rawQty = Number(moveQty);
-  const err = validateQty(rawQty);
+    const rawQty = Number(moveQty);
+    const err = validateQty(rawQty);
 
-  if (err) {
-    setQtyError(err);
-    await swal({ title: "Invalid quantity", text: err, icon: "error" });
-    return;
-  }
+    if (err) {
+      setQtyError(err);
+      await swal({ title: 'Invalid quantity', text: err, icon: 'error' });
+      return;
+    }
 
-  const qty = rawQty;
+    const qty = rawQty;
 
-  try {
-    setSaving(true);
+    try {
+      setSaving(true);
 
-    await upsertProduceSet({
-      name: item.name,
-      type: "Other",
-      location: selectedLocation,
-      storage: "Pantry",
-      quantity: qty,
-      unit: item.unit ?? "pcs",
-      expiration: null,
-      owner,
-      image: null,
-      restockThreshold: 0,
-    });
+      await upsertProduceSet({
+        name: item.name,
+        type: 'Other',
+        location: selectedLocation,
+        storage: 'Pantry',
+        quantity: qty,
+        unit: item.unit ?? 'pcs',
+        expiration: null,
+        owner,
+        image: null,
+        restockThreshold: 0,
+      });
 
-    onMoved?.(item.id, qty);
+      onMoved?.(item.id, qty);
 
-    await swal({
-      title: "Success",
-      text: "Added to pantry",
-      icon: "success",
-    });
+      await swal({
+        title: 'Success',
+        text: 'Added to pantry',
+        icon: 'success',
+      });
 
-    onHide();
-  } catch (e) {
-    await swal({ title: "Error", text: "Failed to add item", icon: "error" });
-  } finally {
-    setSaving(false);
-  }
-};
+      onHide();
+    } catch (e) {
+      await swal({ title: 'Error', text: 'Failed to add item', icon: 'error' });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <Modal show={show} onHide={onHide} centered>
@@ -118,7 +117,8 @@ const handleAdd = async () => {
 
       <Modal.Body>
         <div className="mb-2">
-          Item: <strong>{item?.name ?? ""}</strong>
+          Item:
+          <strong>{item?.name ?? ''}</strong>
         </div>
 
         <Form.Label className="mb-1">Location</Form.Label>
@@ -128,7 +128,7 @@ const handleAdd = async () => {
           disabled={locations.length === 0}
         >
           <option value="" disabled>
-            {locations.length === 0 ? "No locations found" : "Select location..."}
+            {locations.length === 0 ? 'No locations found' : 'Select location...'}
           </option>
           {locations.map((loc) => (
             <option key={loc} value={loc}>
@@ -147,7 +147,8 @@ const handleAdd = async () => {
           onChange={(e) => setMoveQty(Number(e.target.value))}
         />
         <div className="text-muted mt-1" style={{ fontSize: 12 }}>
-          Max: {item?.quantity ?? 0}
+          Max:
+          {item?.quantity ?? 0}
         </div>
       </Modal.Body>
 
@@ -156,7 +157,7 @@ const handleAdd = async () => {
           Cancel
         </Button>
         <Button onClick={handleAdd} disabled={!item || !selectedLocation || !owner || saving}>
-          {saving ? "Adding..." : "Add"}
+          {saving ? 'Adding...' : 'Add'}
         </Button>
       </Modal.Footer>
     </Modal>

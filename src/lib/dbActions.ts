@@ -156,8 +156,7 @@ export async function upsertProduceSet(produce: {
   image: string | null;
   restockThreshold?: number;
 }) {
-  
- // Upsert or find Location by name + owner
+// Upsert or find Location by name + owner
   const location = await prisma.location.upsert({
     where: { name_owner: { name: produce.location, owner: produce.owner } },
     update: {},
