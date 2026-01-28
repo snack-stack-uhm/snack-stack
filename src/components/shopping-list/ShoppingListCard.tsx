@@ -9,6 +9,7 @@ import DeleteShoppingListModal from './DeleteShoppingListModal';
 
 type ShoppingListCardProps = {
   shoppingList: any;
+  owner: string;
 };
 
 const formatDate = (d?: Date | string | null) => {
@@ -22,7 +23,7 @@ const formatDate = (d?: Date | string | null) => {
   });
 };
 
-export default function ShoppingListCard({ shoppingList }: ShoppingListCardProps) {
+export default function ShoppingListCard({ shoppingList, owner }: ShoppingListCardProps) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(shoppingList.name);
   const [tempName, setTempName] = useState(shoppingList.name);
@@ -150,6 +151,7 @@ export default function ShoppingListCard({ shoppingList }: ShoppingListCardProps
         show={showViewModal}
         onHide={() => setShowViewModal(false)}
         shoppingList={shoppingList}
+        owner={owner}
       />
 
       <DeleteShoppingListModal
