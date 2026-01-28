@@ -181,7 +181,7 @@ export default function SignInPage() {
         <div className={styles.formWrapper}>
           <h1 className={styles.title}>Sign In</h1>
           <p className={styles.descriptionCentered}>
-          Enter your email and password to access your Snack Stack account.
+            Enter your email and password to access your Snack Stack account.
           </p>
           <form onSubmit={handleSubmit}>
             <div className={styles.inputGroup}>
