@@ -152,11 +152,14 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList }: ViewShoppingListM
                           {item.restockTrigger === 'custom' && (
                             <input
                               type="number"
-                              min="1"
+                              min="0"
                               max="100"
                               value={item.customThreshold || ''}
-                              onChange={(e) =>
-                                handleThresholdChange(item.id, parseFloat(e.target.value))}
+                              onChange={(e) => {
+                                // ensure min 0 (no negatives)
+                                const value = Math.max(0, parseFloat(e.target.value));
+                                handleThresholdChange(item.id, value);
+                              }}
                               className="form-control form-control-sm mt-1"
                               placeholder="% left"
                             />
