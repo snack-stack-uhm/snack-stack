@@ -9,6 +9,7 @@ import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
 import { BagCheckFill } from 'react-bootstrap-icons';
 import AddToShoppingListModal from './AddToShoppingListModal';
 import EditShoppingListItemModal from './EditShoppingListItemModal';
+import AddShoppingListItemToPantryModal from './AddShoppingListItemToPantryModal';
 
 interface ShoppingListItem {
   id: number;
@@ -30,14 +31,17 @@ interface ViewShoppingListModalProps {
   show: boolean;
   onHide: () => void;
   shoppingList?: ShoppingList; // optional for safety
+  owner: string;
 }
 
-const ViewShoppingListModal = ({ show, onHide, shoppingList }: ViewShoppingListModalProps) => {
+const ViewShoppingListModal = ({ show, onHide, shoppingList, owner }: ViewShoppingListModalProps) => {
   const [items, setItems] = useState<ShoppingListItem[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState<number | null>(null);
   const [checkedState, setCheckedState] = useState<Record<number, boolean>>({});
   const [editingItem, setEditingItem] = useState<ShoppingListItem | null>(null);
+  const [pantryItem, setPantryItem] = useState<ShoppingListItem | null>(null);
+  const [showAddToPantryModal, setShowAddToPantryModal] = useState(false);
 
   // Update items when the shopping list changes
   useEffect(() => {
@@ -82,6 +86,19 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList }: ViewShoppingListM
     } finally {
       setDeletingItemId(null);
     }
+  };
+
+  const updateItemQuantity = async (itemId: number, newQty: number) => {
+    await fetch(`/api/shopping-list-item/${itemId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quantity: newQty }),
+    });
+  };
+
+  const openAddToPantry = (item: ShoppingListItem) => {
+    setPantryItem(item);
+    setShowAddToPantryModal(true);
   };
 
   const toggleCheckbox = (itemId: number) => {
@@ -175,6 +192,14 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList }: ViewShoppingListM
                           </Button>
 
                           <Button
+                            variant="edit"
+                            size="sm"
+                            onClick={() => openAddToPantry(item)}
+                          >
+                            Pantry+
+                          </Button>
+
+                          <Button
                             variant="danger"
                             size="sm"
                             onClick={() => handleDeleteItem(item.id)}
@@ -227,6 +252,31 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList }: ViewShoppingListM
         sidePanel={false}
         prefillName=""
       />
+      <AddShoppingListItemToPantryModal
+        show={showAddToPantryModal}
+        onHide={() => setShowAddToPantryModal(false)}
+        item={pantryItem}
+        owner={owner}
+        onMoved={async (itemId, movedQty) => {
+          const current = items.find((it) => it.id === itemId);
+          if (!current) return;
+
+          const newQty = current.quantity - movedQty;
+
+          setItems((prev) =>
+            prev
+              .map((it) => (it.id === itemId ? { ...it, quantity: newQty } : it))
+              .filter((it) => it.quantity > 0),
+          );
+
+          if (newQty <= 0) {
+            await handleDeleteItem(itemId);
+          } else {
+            await updateItemQuantity(itemId, newQty);
+          }
+        }}
+      />
+
       {editingItem && (
       <EditShoppingListItemModal
         show={!!editingItem}
