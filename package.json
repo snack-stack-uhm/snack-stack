@@ -18,10 +18,11 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
+    "@neondatabase/serverless": "^1.0.2",
     "@ngneat/falso": "^7.2.0",
-    "@prisma/adapter-pg": "^7.1.0",
-    "@prisma/client": "^7.0.1",
-    "@prisma/config": "^7.0.1",
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
+    "@prisma/config": "^7.3.0",
     "@zxing/browser": "^0.1.5",
     "@zxing/library": "^0.21.3",
     "bcrypt": "^5.1.1",
@@ -63,7 +64,7 @@
     "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.3.1",
     "prettier-eslint": "^16.3.0",
-    "prisma": "^7.0.1",
+    "prisma": "^7.3.0",
     "testcafe": "^3.7.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
