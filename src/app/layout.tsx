@@ -9,7 +9,7 @@ import Providers from './providers';
 const saira = Saira({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Pantry Pals',
+  title: 'Snack Stack',
   description: 'Team 1 project at UH Manoa',
 };
 

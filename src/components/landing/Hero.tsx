@@ -29,7 +29,7 @@ export default function Hero() {
             >
               <Image
                 src="/pantrypals-logo.png"
-                alt="Pantry Pals Logo"
+                alt="Snack Stack Logo"
                 width={420}
                 height={420}
                 style={{ backgroundColor: 'white' }}
@@ -49,7 +49,7 @@ export default function Hero() {
               >
                 Welcome to
                 {' '}
-                <span style={{ color: 'var(--fern-green)' }}>Pantry Pals</span>
+                <span style={{ color: 'var(--fern-green)' }}>Snack Stack</span>
               </motion.h1>
 
               <motion.p
