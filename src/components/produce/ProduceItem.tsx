@@ -5,8 +5,8 @@ import { Button } from 'react-bootstrap';
 import { PencilSquare, Trash } from 'react-bootstrap-icons';
 import { ProduceRelations } from '@/types/ProduceRelations';
 import EditProduceModal from './EditProduceModal';
-import '../../styles/buttons.css';
 import DeleteProduceModal from './DeleteProduceModal';
+import '../../styles/buttons.css';
 
 /* eslint-disable react/require-default-props */
 const ProduceItem = ({
@@ -60,35 +60,50 @@ const ProduceItem = ({
   return (
     <>
       <tr>
+        {/* Name */}
         <td>{name}</td>
+
+        {/* Category */}
         <td>{type}</td>
-        <td>
-          {(typeof storage === 'object' ? storage?.name : storage) || 'N/A'} at{' '}
-          {(typeof location === 'object' ? location?.name : location) || 'N/A'}
-        </td>
+
+        {/* Location */}
+        <td>{(typeof location === 'object' ? location?.name : location) || 'N/A'}</td>
+
+        {/* Storage */}
+        <td>{(typeof storage === 'object' ? storage?.name : storage) || 'N/A'}</td>
+
+        {/* Quantity */}
         <td>
           {quantity.toString()}
           {unit ? ` ${unit}` : ''}
         </td>
+
+        {/* Restock Threshold */}
         <td>{safeRestock}</td>
+
+        {/* Expiration Date */}
         <td>{expiration ? new Date(expiration).toISOString().split('T')[0] : 'N/A'}</td>
-        <td>
-          <Button className="btn-edit" onClick={() => setShowEditModal(true)}>
+
+        {/* Actions column */}
+        <td style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+          {/* Edit */}
+          <Button className="btn-edit" onClick={() => setShowEditModal(true)} title="Edit">
             <PencilSquare color="white" size={18} />
           </Button>
-        </td>
-        <td>
-          <Button variant="danger" className="btn-delete" onClick={() => setShowDeleteModal(true)}>
+
+          {/* Delete */}
+          <Button variant="danger" className="btn-delete" onClick={() => setShowDeleteModal(true)} title="Delete">
             <Trash color="white" size={18} />
           </Button>
-        </td>
-        <td>
+
+          {/* Add to Shopping List */}
           <Button
             variant="success"
             size="sm"
             className="btn-submit"
             onClick={handleAddToShoppingList}
             disabled={addingToList}
+            title="Add to Shopping List"
           >
             {addingToList ? 'Adding…' : 'Add'}
           </Button>

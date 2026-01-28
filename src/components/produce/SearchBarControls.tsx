@@ -31,11 +31,11 @@ const SearchBarControls: React.FC<Props> = ({
   <div className="d-flex flex-wrap gap-2 align-items-center justify-content-center my-4">
     <Form.Control
       type="text"
-      placeholder="Search by name, type, or storage…"
+      placeholder="Search by name, category, or location…"
       value={search}
       onChange={(e) => setSearch(e.target.value)}
       onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
-      style={{ maxWidth: '280px' }}
+      style={{ maxWidth: '315px' }}
     />
 
     <Form.Select
@@ -45,7 +45,7 @@ const SearchBarControls: React.FC<Props> = ({
     >
       <option value="">Sort by…</option>
       <option value="name-asc">Name (A–Z)</option>
-      <option value="type-asc">Type (A–Z)</option>
+      <option value="type-cat">Category (A–Z)</option>
       <option value="expiration-soon">Expiration (Soonest)</option>
       <option value="qty-desc">Quantity (High → Low)</option>
       <option value="qty-asc">Quantity (Low → High)</option>

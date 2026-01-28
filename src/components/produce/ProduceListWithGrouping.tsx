@@ -20,7 +20,7 @@ const toTime = (d: unknown): number => {
 export type SortType =
   | ''
   | 'name-asc'
-  | 'type-asc'
+  | 'cat-asc'
   | 'expiration-soon'
   | 'qty-desc'
   | 'qty-asc';

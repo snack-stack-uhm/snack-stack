@@ -258,7 +258,7 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
             </Col>
             <Col xs={6}>
               <Form.Group>
-                <Form.Label className="mb-0 required-field">Type</Form.Label>
+                <Form.Label className="mb-0 required-field">Category</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="e.g., Meat"
@@ -426,7 +426,7 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
           <Row className="mb-3">
             <Col xs={12}>
               <Form.Group>
-                <Form.Label className="mb-0">Restock Threshold</Form.Label>
+                <Form.Label className="mb-0">Restock At</Form.Label>
                 <Form.Control
                   type="number"
                   step={0.5}
@@ -454,7 +454,7 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
           <Row className="mb-3">
             <Col xs={6}>
               <Form.Group>
-                <Form.Label className="mb-0">Expiration Date</Form.Label>
+                <Form.Label className="mb-0">Expiration</Form.Label>
                 <Form.Control
                   type="date"
                   isInvalid={!!errors.expiration}
