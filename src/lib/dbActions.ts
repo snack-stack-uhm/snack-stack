@@ -144,6 +144,58 @@ export async function addProduce(produce: {
   redirect('/view-pantry');
 }
 
+export async function upsertProduceSet(produce: {
+  name: string;
+  type: string;
+  location: string;
+  storage: string;
+  quantity: number;
+  unit: string;
+  expiration: string | Date | null;
+  owner: string;
+  image: string | null;
+  restockThreshold?: number;
+}) {
+  
+ // Upsert or find Location by name + owner
+  const location = await prisma.location.upsert({
+    where: { name_owner: { name: produce.location, owner: produce.owner } },
+    update: {},
+    create: { name: produce.location, owner: produce.owner },
+  });
+
+  // Upsert or find Storage by name + locationId
+  const storage = await prisma.storage.upsert({
+    where: { name_locationId: { name: produce.storage, locationId: location.id } },
+    update: {},
+    create: { name: produce.storage, locationId: location.id },
+  });
+
+  return prisma.produce.upsert({
+    where: {
+      name_owner: {
+        name: produce.name,
+        owner: produce.owner,
+      },
+    },
+    update: {
+      quantity: { increment: produce.quantity },
+    },
+    create: {
+      name: produce.name,
+      type: produce.type,
+      owner: produce.owner,
+      locationId: location.id,
+      storageId: storage.id,
+      quantity: produce.quantity,
+      unit: produce.unit,
+      expiration: produce.expiration ? new Date(produce.expiration) : null,
+      image: produce.image ?? null,
+      restockThreshold: produce.restockThreshold ?? 0,
+    },
+  });
+}
+
 /**
  * Edits an existing produce.
  */
