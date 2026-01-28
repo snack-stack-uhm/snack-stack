@@ -79,10 +79,15 @@ const ProduceItem = ({
         </td>
 
         {/* Restock Threshold */}
-        <td>{safeRestock}</td>
+        <td>
+          {safeRestock}
+          {unit ? ` ${unit}` : ''}
+        </td>
 
         {/* Expiration Date */}
-        <td>{expiration ? new Date(expiration).toISOString().split('T')[0] : 'N/A'}</td>
+        <td>{expiration ? new Date(expiration).toLocaleDateString('en-US') // YYYY-MM-DD
+          : 'N/A'}
+        </td>
 
         {/* Actions column */}
         <td style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
