@@ -1,13 +1,19 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } },
+  _request: Request,
+  ctx: RouteContext,
 ) {
   try {
-    const id = Number(params.id);
-    const item = await prisma.shoppingListItem.findUnique({ where: { id } });
+    const { id } = await ctx.params;
+    const itemId = Number(id);
+
+    const item = await prisma.shoppingListItem.findUnique({ where: { id: itemId } });
     if (!item) {
       return NextResponse.json({ error: 'Item not found' }, { status: 404 });
     }
@@ -40,7 +46,7 @@ export async function DELETE(
     });
 
     // Delete from shopping list
-    await prisma.shoppingListItem.delete({ where: { id } });
+    await prisma.shoppingListItem.delete({ where: { id: itemId } });
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -51,14 +57,16 @@ export async function DELETE(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } },
+  ctx: RouteContext,
 ) {
   try {
-    const id = Number(params.id);
+    const { id } = await ctx.params;
+    const itemId = Number(id);
+
     const body = await request.json();
 
     const updatedItem = await prisma.shoppingListItem.update({
-      where: { id },
+      where: { id: itemId },
       data: {
         name: body.name,
         quantity: body.quantity,

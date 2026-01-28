@@ -9,14 +9,15 @@ import AddToShoppingList from '@/components/recipes/AddToShoppingList';
 import UploadDishButton from '@/components/recipes/UploadDishButton';
 import ViewDishImagesButton from '@/components/recipes/ViewDishImagesButton';
 
-type PageProps = { params: { id: string } };
+type PageProps = { params: Promise<{ id: string }> };
 export const dynamic = 'force-dynamic';
 
 export default async function RecipeDetailPage({ params }: PageProps) {
-  const id = Number(params.id);
-  if (Number.isNaN(id)) return notFound();
+  const { id } = await params;
+  const recipeId = Number(id);
+  if (Number.isNaN(recipeId)) return notFound();
 
-  const recipe = await getRecipeById(id);
+  const recipe = await getRecipeById(recipeId);
   if (!recipe) return notFound();
 
   const session = await getServerSession();

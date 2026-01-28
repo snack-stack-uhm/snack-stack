@@ -34,7 +34,7 @@ async function runApiTests() {
         json: async () => test.input,
       } as Request;
 
-      const response = await PATCH(request, { params: test.params });
+      const response = await PATCH(request, { params: Promise.resolve(test.params) });
       const body = await response.json();
       if (response.status === test.expectedStatus) {
         console.log(`PASS: ${test.description}`);
