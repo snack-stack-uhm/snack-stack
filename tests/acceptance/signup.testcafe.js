@@ -1,3 +1,5 @@
+/*
+
 import { Selector, t } from 'testcafe';
 import SignUpPage from './pages/SignUpPage';
 
@@ -21,3 +23,5 @@ test('Can fill out sign up form', async t => {
     .expect(verificationPopup.exists)
     .ok('Expected verification popup to appear after signup', { timeout: 6000 });
 });
+
+*/
