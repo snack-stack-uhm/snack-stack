@@ -22,7 +22,7 @@ const About = () => (
             transition={{ duration: 0.6 }}
           >
             <Image
-              src="/pantrypals-logo.png"
+              src="/snack-stack-logo.png"
               alt="Snack Stack Logo"
               width={250}
               height={250}

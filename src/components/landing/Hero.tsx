@@ -28,7 +28,7 @@ export default function Hero() {
               whileHover={{ scale: 1.04, rotate: 0.8 }}
             >
               <Image
-                src="/pantrypals-logo.png"
+                src="/snack-stack-logo.png"
                 alt="Snack Stack Logo"
                 width={420}
                 height={420}

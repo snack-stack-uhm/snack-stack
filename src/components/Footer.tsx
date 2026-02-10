@@ -6,7 +6,7 @@ import { GeoAlt, Envelope, Github } from 'react-bootstrap-icons';
 import Link from 'next/link';
 
 const Footer = () => {
-  const [imgSrc, setImgSrc] = useState('/pantrypals-logo.png');
+  const [imgSrc, setImgSrc] = useState('/snack-stack-logo.png');
   const currentYear = new Date().getFullYear();
 
   return (
