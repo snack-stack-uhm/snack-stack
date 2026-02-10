@@ -49,7 +49,7 @@ const ProduceTable = ({ rows }: { rows: ProduceRelations[] }) => {
             rows.map((p) => <ProduceItem key={p.id} {...p} restockThreshold={p.restockThreshold ?? 1} />)
           ) : (
             <tr>
-              <td colSpan={10} className="text-center">
+              <td colSpan={8} className="text-center">
                 No items found
               </td>
             </tr>

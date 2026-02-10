@@ -22,7 +22,7 @@ export type RecipeInput = {
   description?: string;
   imageUrl?: string;
   dietary?: string[];
-  // 🔥 Only structured ingredients now
+  // Only structured ingredients now
   ingredientItems?: IngredientItemInput[];
   instructions?: string;
   servings?: number;
