@@ -6,7 +6,7 @@ import { GeoAlt, Envelope, Github } from 'react-bootstrap-icons';
 import Link from 'next/link';
 
 const Footer = () => {
-  const [imgSrc, setImgSrc] = useState('/pantrypals-logo.png');
+  const [imgSrc, setImgSrc] = useState('/snack-stack-logo.png');
   const currentYear = new Date().getFullYear();
 
   return (
@@ -20,13 +20,13 @@ const Footer = () => {
               <div className="p-1 me-4 rounded" style={{ backgroundColor: 'var(--timberwolf)' }}>
                 <Image
                   src={imgSrc}
-                  alt="Pantry Pals Logo"
+                  alt="Snack Stack Logo"
                   width="50"
                   height="50"
                   onError={() => setImgSrc('/fallback-logo.png')}
                 />
               </div>
-              <h5 className="fw-bold mb-0">Pantry Pals</h5>
+              <h5 className="fw-bold mb-0">Snack Stack</h5>
             </Link>
 
             <p className="footer-text-muted small">
@@ -104,7 +104,7 @@ const Footer = () => {
               {' '}
               {currentYear}
               {' '}
-              Pantry Pals. All Rights Reserved.
+              Snack Stack. All Rights Reserved.
             </Col>
           </Row>
         </Container>
