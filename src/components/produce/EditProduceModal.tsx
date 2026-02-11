@@ -116,11 +116,21 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
 
   useEffect(() => {
     if (show) {
-      reset(mapProduceToFormValues(produce));
-      setSelectedLocation(produce.location?.name || '');
-      setSelectedStorage(produce.storage?.name || '');
+      const locationName = produce.location?.name || '';
+      const storageName = produce.storage?.name || '';
+      const resolvedUnitChoice = unitOptions.includes(produce.unit) ? produce.unit : 'Other';
 
-      setUnitChoice(unitOptions.includes(produce.unit) ? produce.unit : 'Other');
+      reset(mapProduceToFormValues(produce));
+      setSelectedLocation(locationName);
+      setSelectedStorage(storageName);
+      setUnitChoice(resolvedUnitChoice);
+      setValue('location', locationName, { shouldValidate: true });
+      setValue('storage', storageName, { shouldValidate: true });
+      setValue(
+        'unit',
+        resolvedUnitChoice === 'Other' ? produce.unit : resolvedUnitChoice,
+        { shouldValidate: true },
+      );
 
       // Always fetch available locations
       const fetchLocations = async () => {
@@ -139,7 +149,7 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
         fetchStorage(produce.location.name);
       }
     }
-  }, [show, produce, reset, unitOptions, fetchStorage]);
+  }, [show, produce, reset, unitOptions, fetchStorage, setValue]);
 
   const handleClose = () => {
     reset();
@@ -219,12 +229,12 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
                     const { value } = e.target;
                     setSelectedLocation(value);
                     if (value === 'Add Location') {
-                      setValue('location', '');
+                      setValue('location', '', { shouldValidate: true });
                       setStorageOptions([]);
                       setSelectedStorage('Add Storage'); // force user to add storage
-                      setValue('storage', '');
+                      setValue('storage', '', { shouldValidate: true });
                     } else {
-                      setValue('location', value);
+                      setValue('location', value, { shouldValidate: true });
                       await fetchStorage(value); // fetch storages for selected location
                     }
                   }}
@@ -248,7 +258,7 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
                     placeholder="Enter new location"
                     className={`mt-2 ${errors.location ? 'is-invalid' : ''}`}
                     {...register('location', { required: true })}
-                    onChange={(e) => setValue('location', e.target.value)}
+                    onChange={(e) => setValue('location', e.target.value, { shouldValidate: true })}
                     required
                   />
                 )}
@@ -268,9 +278,9 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
                     setSelectedStorage(value);
                     if (value === 'Add Storage') {
                       // Clear the field so input starts empty
-                      setValue('storage', '');
+                      setValue('storage', '', { shouldValidate: true });
                     } else {
-                      setValue('storage', value);
+                      setValue('storage', value, { shouldValidate: true });
                     }
                   }}
                 >
@@ -293,7 +303,7 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
                     placeholder="Enter new storage"
                     className={`mt-2 ${errors.storage ? 'is-invalid' : ''}`}
                     {...register('storage', { required: true })}
-                    onChange={(e) => setValue('storage', e.target.value)}
+                    onChange={(e) => setValue('storage', e.target.value, { shouldValidate: true })}
                     required
                   />
                 )}
@@ -328,7 +338,7 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
                   onChange={(e) => {
                     const { value } = e.target;
                     setUnitChoice(value);
-                    setValue('unit', value !== 'Other' ? value : '');
+                    setValue('unit', value !== 'Other' ? value : '', { shouldValidate: true });
                   }}
                   isInvalid={!!errors.unit}
                 >
