@@ -90,7 +90,7 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList, owner }: ViewShoppi
 
   const updateItemQuantity = async (itemId: number, newQty: number) => {
     await fetch(`/api/shopping-list-item/${itemId}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ quantity: newQty }),
     });
