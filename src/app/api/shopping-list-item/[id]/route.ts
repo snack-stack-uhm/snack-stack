@@ -65,6 +65,14 @@ export async function PUT(
 
     const body = await request.json();
 
+    if (body.quantity !== undefined) {
+      const parsedQuantity = Number(body.quantity);
+      if (!Number.isFinite(parsedQuantity) || parsedQuantity < 0) {
+        return NextResponse.json({ error: 'Quantity cannot be negative' }, { status: 400 });
+      }
+      body.quantity = parsedQuantity;
+    }
+
     const updatedItem = await prisma.shoppingListItem.update({
       where: { id: itemId },
       data: {

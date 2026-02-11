@@ -2,6 +2,7 @@
 
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
+import swal from 'sweetalert';
 
 type EditModalProps = {
   show: boolean;
@@ -38,12 +39,18 @@ export default function EditShoppingListItemModal({
   };
 
   const handleSave = async () => {
+    const quantity = Number(form.quantity);
+    if (!Number.isFinite(quantity) || quantity < 1) {
+      await swal('Invalid quantity', 'Quantity must be at least 1.', 'error');
+      return;
+    }
+
     await fetch(`/api/shopping-list-item/${item.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...form,
-        quantity: Number(form.quantity),
+        quantity,
         price: form.price ? Number(form.price) : null,
         customThreshold:
           form.restockTrigger === 'custom'
@@ -81,6 +88,7 @@ export default function EditShoppingListItemModal({
               <Form.Control
                 name="quantity"
                 type="number"
+                min={1}
                 value={form.quantity}
                 onChange={handleChange}
               />

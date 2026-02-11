@@ -12,9 +12,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!id || quantity === undefined || !owner) return res.status(400).json({ error: 'Missing data' });
 
+    const parsedQuantity = Number.parseFloat(quantity);
+    if (!Number.isFinite(parsedQuantity) || parsedQuantity < 0) {
+      return res.status(400).json({ error: 'Quantity cannot be negative' });
+    }
+
     const updatedProduce = await prisma.produce.update({
       where: { id: Number(id) },
-      data: { quantity: parseFloat(quantity) },
+      data: { quantity: parsedQuantity },
     });
 
     // 🔹 Trigger auto restock

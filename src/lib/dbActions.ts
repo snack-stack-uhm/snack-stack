@@ -5,6 +5,15 @@ import { hash, compare } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
 
+const assertNonNegative = (value: number, field: string) => {
+  if (!Number.isFinite(value)) {
+    throw new Error(`${field} must be a number.`);
+  }
+  if (value < 0) {
+    throw new Error(`${field} cannot be negative.`);
+  }
+};
+
 /**
  * Creates a new user.
  */
@@ -72,6 +81,8 @@ export async function addProduce(produce: {
   image: string | null;
   restockThreshold?: number;
 }) {
+  assertNonNegative(produce.quantity, 'Quantity');
+
   // Upsert or find Location by name + owner
   const location = await prisma.location.upsert({
     where: { name_owner: { name: produce.location, owner: produce.owner } },
@@ -156,7 +167,9 @@ export async function upsertProduceSet(produce: {
   image: string | null;
   restockThreshold?: number;
 }) {
-// Upsert or find Location by name + owner
+  assertNonNegative(produce.quantity, 'Quantity');
+
+  // Upsert or find Location by name + owner
   const location = await prisma.location.upsert({
     where: { name_owner: { name: produce.location, owner: produce.owner } },
     update: {},
@@ -206,6 +219,17 @@ export async function editProduce(
     owner: string;
   },
 ) {
+  if (typeof produce.quantity === 'number') {
+    assertNonNegative(produce.quantity, 'Quantity');
+  } else if (
+    produce.quantity
+    && typeof produce.quantity === 'object'
+    && 'set' in produce.quantity
+    && typeof produce.quantity.set === 'number'
+  ) {
+    assertNonNegative(produce.quantity.set, 'Quantity');
+  }
+
   // Find or create location and storage first
   const location = await prisma.location.upsert({
     where: { name_owner: { name: produce.location as string, owner: produce.owner as string } },
@@ -380,6 +404,8 @@ export async function addShoppingListItem(data: {
   price?: number;
   shoppingListId: number;
 }) {
+  assertNonNegative(data.quantity, 'Quantity');
+
   const item = await prisma.shoppingListItem.create({
     data: {
       name: data.name,
@@ -407,6 +433,10 @@ export async function editShoppingListItem(
     customThreshold?: number | null;
   },
 ) {
+  if (typeof item.quantity === 'number') {
+    assertNonNegative(item.quantity, 'Quantity');
+  }
+
   const updatedItem = await prisma.shoppingListItem.update({
     where: { id: item.id },
     data: {

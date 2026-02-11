@@ -36,12 +36,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: 'Item already exists' }, { status: 200 });
     }
 
+    const parsedQuantity = Number(quantity);
+    if (quantity !== undefined && quantity !== null && Number.isFinite(parsedQuantity) && parsedQuantity < 0) {
+      return NextResponse.json({ error: 'Quantity cannot be negative' }, { status: 400 });
+    }
+
     // Add item
     const item = await prisma.shoppingListItem.create({
       data: {
         shoppingListId: shoppingList.id,
         name,
-        quantity: Number(quantity) || 1,
+        quantity: Number.isFinite(parsedQuantity) && parsedQuantity > 0 ? parsedQuantity : 1,
         unit: unit || '',
         price: null,
       },

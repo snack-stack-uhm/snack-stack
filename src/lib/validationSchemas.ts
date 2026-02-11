@@ -5,7 +5,9 @@ export const AddProduceSchema = Yup.object({
   type: Yup.string().required(),
   location: Yup.string().required(),
   storage: Yup.string().required(),
-  quantity: Yup.number().positive().required(),
+  quantity: Yup.number()
+    .min(0, 'Quantity cannot be negative')
+    .required(),
   unit: Yup.string().required(),
   expiration: Yup.date()
     .nullable()
@@ -26,7 +28,9 @@ export const EditProduceSchema = Yup.object({
   type: Yup.string().required(),
   location: Yup.string().required(),
   storage: Yup.string().required(),
-  quantity: Yup.number().positive().required(),
+  quantity: Yup.number()
+    .min(0, 'Quantity cannot be negative')
+    .required(),
   unit: Yup.string().required(),
   expiration: Yup.date()
     .nullable()
