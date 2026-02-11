@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { AddShoppingListItemSchema } from '@/lib/validationSchemas';
 import { addShoppingListItem } from '@/lib/dbActions';
@@ -19,6 +19,7 @@ type AddItemValues = {
   shoppingListId: number;
   price?: number;
   unit?: string;
+  type?: string;
 };
 
 interface Props {
@@ -29,22 +30,33 @@ interface Props {
   prefillName: string;
 }
 
-const AddToShoppingListModal = ({
+export default function AddToShoppingListModal({
   show,
   onHide,
   shoppingLists,
   sidePanel = false,
   prefillName,
-}: Props) => {
+}: Props) {
   const router = useRouter();
   const { data: session } = useSession();
   const owner = session?.user?.email;
+
+  // --- State for selected Item Type ---
+  const [selectedType, setSelectedType] = useState('weight');
+
+  // Map of units per type
+  const unitOptions: Record<string, string[]> = {
+    weight: ['oz', 'lb', 'kg'],
+    liquid: ['fl oz', 'L', 'gal'],
+    count: ['pcs', 'pack'],
+  };
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm<AddItemValues>({
     resolver: yupResolver(AddShoppingListItemSchema),
     defaultValues: {
@@ -53,15 +65,18 @@ const AddToShoppingListModal = ({
       unit: '',
       price: 0,
       shoppingListId: shoppingLists[0]?.id ?? 0,
+      type: 'weight',
     },
   });
 
   useEffect(() => {
-    if (!show) reset({ name: prefillName });
+    if (!show) reset({ name: prefillName, type: 'weight', unit: '' });
+    setSelectedType('weight');
   }, [show, reset, prefillName]);
 
   const handleClose = () => {
-    reset({ name: prefillName });
+    reset({ name: prefillName, type: 'weight', unit: '' });
+    setSelectedType('weight');
     onHide();
   };
 
@@ -72,9 +87,7 @@ const AddToShoppingListModal = ({
     }
 
     try {
-      const price = typeof data.price === 'number'
-        ? data.price
-        : parseFloat(data.price || '0');
+      const price = typeof data.price === 'number' ? data.price : parseFloat(data.price || '0');
 
       await addShoppingListItem({
         name: data.name.trim(),
@@ -82,6 +95,7 @@ const AddToShoppingListModal = ({
         unit: data.unit || '',
         price,
         shoppingListId: Number(data.shoppingListId),
+        type: data.type,
       });
 
       swal('Success', 'Item added to your shopping list', 'success', { timer: 2000 });
@@ -96,7 +110,7 @@ const AddToShoppingListModal = ({
   const formContent = (
     <Form noValidate onSubmit={handleSubmit(onSubmit)}>
       <Row className="mb-3">
-        <Col xs={6}>
+        <Col xs={4}>
           <Form.Group>
             <Form.Label>Item Name</Form.Label>
             <Form.Control
@@ -109,7 +123,7 @@ const AddToShoppingListModal = ({
           </Form.Group>
         </Col>
 
-        <Col xs={3}>
+        <Col xs={2}>
           <Form.Group>
             <Form.Label>Qty</Form.Label>
             <Form.Control
@@ -124,8 +138,36 @@ const AddToShoppingListModal = ({
 
         <Col xs={3}>
           <Form.Group>
+            <Form.Label>Item Type</Form.Label>
+            <Form.Select
+              {...register('type')}
+              value={selectedType}
+              onChange={(e) => {
+                setSelectedType(e.target.value);
+                setValue('type', e.target.value);
+                setValue('unit', ''); // reset unit when type changes
+              }}
+            >
+              <option value="weight">Weight</option>
+              <option value="liquid">Liquid</option>
+              <option value="count">Count</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+
+        <Col xs={3}>
+          <Form.Group>
             <Form.Label>Unit</Form.Label>
-            <Form.Control type="text" {...register('unit')} />
+            <Form.Select {...register('unit')} value={undefined}>
+              <option value="" disabled>
+                Select unit…
+              </option>
+              {unitOptions[selectedType].map((u) => (
+                <option key={u} value={u}>
+                  {u}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
         </Col>
       </Row>
@@ -176,7 +218,7 @@ const AddToShoppingListModal = ({
         <Col>
           <Button
             type="button"
-            onClick={() => reset({ name: prefillName })}
+            onClick={() => reset({ name: prefillName, type: 'weight', unit: '' })}
             variant="warning"
             className="btn-reset"
           >
@@ -202,6 +244,4 @@ const AddToShoppingListModal = ({
       <Offcanvas.Body>{formContent}</Offcanvas.Body>
     </Offcanvas>
   );
-};
-
-export default AddToShoppingListModal;
+}
