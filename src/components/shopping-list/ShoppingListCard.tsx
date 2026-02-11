@@ -37,7 +37,7 @@ export default function ShoppingListCard({ shoppingList, owner }: ShoppingListCa
     if (!tempName.trim()) return;
 
     await fetch(`/api/shopping-list/${shoppingList.id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: tempName }),
     });

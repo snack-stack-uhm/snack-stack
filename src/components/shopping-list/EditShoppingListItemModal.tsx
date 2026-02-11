@@ -39,7 +39,7 @@ export default function EditShoppingListItemModal({
 
   const handleSave = async () => {
     await fetch(`/api/shopping-list-item/${item.id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...form,
