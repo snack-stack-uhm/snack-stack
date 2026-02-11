@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className={styles.input}
-              placeholder="you@example.com"
+              // placeholder="you@example.com"
             />
           </div>
           <button
