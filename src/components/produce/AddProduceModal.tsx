@@ -100,6 +100,26 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
   const [showPicker, setShowPicker] = useState(false);
   const [imageAlt, setImageAlt] = useState('');
 
+  const resetFormState = useCallback(() => {
+    reset({
+      name: '',
+      type: '',
+      location: '',
+      storage: '',
+      quantity: undefined,
+      unit: '',
+      expiration: null,
+      owner: produce?.owner ?? '',
+      image: '',
+      restockThreshold: null,
+    });
+    setSelectedLocation('');
+    setSelectedStorage('');
+    setUnitChoice('');
+    setStorageOptions([]);
+    setImageAlt('');
+  }, [produce?.owner, reset]);
+
   const fetchStorage = useCallback(
     async (location: string) => {
       if (!produce?.owner || !location) return;
@@ -122,10 +142,7 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
   // useEffect
   useEffect(() => {
     if (show) {
-      reset();
-      setSelectedLocation('');
-      setSelectedStorage('');
-      setUnitChoice('');
+      resetFormState();
 
       // Always fetch all available locations for this owner
       const fetchLocations = async () => {
@@ -149,13 +166,10 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
         }
       }
     }
-  }, [show, reset, produce, setValue, fetchStorage]);
+  }, [show, produce, setValue, fetchStorage, resetFormState]);
 
   const handleClose = () => {
-    reset();
-    setSelectedLocation('');
-    setSelectedStorage('');
-    setUnitChoice('');
+    resetFormState();
     onHide();
   };
 
@@ -517,7 +531,7 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
               <Button
                 type="button"
                 variant="warning"
-                onClick={() => reset()}
+                onClick={resetFormState}
                 className="btn-reset"
               >
                 Reset
