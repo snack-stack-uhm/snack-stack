@@ -392,6 +392,7 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
                 <Form.Label className="mb-0 required-field">Quantity</Form.Label>
                 <Form.Control
                   type="number"
+                  min={0}
                   step={0.5}
                   placeholder="e.g., 1, 1.5"
                   isInvalid={!!errors.quantity}
