@@ -460,13 +460,16 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
                 <Form.Control
                   type="date"
                   placeholder="YYYY-MM-DD"
+                  aria-describedby="expiration-hint"
                   isInvalid={!!errors.expiration}
                   {...register('expiration')}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.expiration?.message as string}
                 </Form.Control.Feedback>
-                <Form.Text className="text-muted">Format: YYYY-MM-DD</Form.Text>
+                <Form.Text id="expiration-hint" className="text-muted">
+                  Hint: YYYY-MM-DD
+                </Form.Text>
               </Form.Group>
             </Col>
 
