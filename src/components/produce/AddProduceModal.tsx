@@ -100,6 +100,9 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
   const [showPicker, setShowPicker] = useState(false);
   const [imageAlt, setImageAlt] = useState('');
 
+  // State for reset confirmation modal
+  const [showConfirmReset, setShowConfirmReset] = useState(false);
+
   const resetFormState = useCallback(() => {
     reset({
       name: '',
@@ -533,11 +536,32 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
               <Button
                 type="button"
                 variant="warning"
-                onClick={resetFormState}
+                onClick={() => setShowConfirmReset(true)}
                 className="btn-reset"
               >
                 Reset
               </Button>
+
+              <Modal show={showConfirmReset} onHide={() => setShowConfirmReset(false)} centered>
+                <Modal.Header closeButton>
+                  <Modal.Title>Confirm Reset</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to reset?</Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={() => setShowConfirmReset(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="warning"
+                    onClick={() => {
+                      resetFormState();
+                      setShowConfirmReset(false);
+                    }}
+                  >
+                    Reset
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </Col>
           </Row>
         </Form>
