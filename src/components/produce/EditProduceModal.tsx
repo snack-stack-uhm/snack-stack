@@ -164,6 +164,8 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
     }
   };
 
+  if (!show) return null; // unmount model DOM when closed
+
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header className="justify-content-center">
