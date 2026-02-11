@@ -77,9 +77,6 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
   const [showPicker, setShowPicker] = useState(false);
   const [imageAlt, setImageAlt] = useState('');
 
-  // State for reset confirmation modal
-  const [showConfirmReset, setShowConfirmReset] = useState(false);
-
   // RHF setup
   const {
     register,
@@ -322,8 +319,8 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
               <Form.Group>
                 <Form.Label className="mb-0 required-field">Quantity</Form.Label>
                 <Form.Control
-                  type="number"
                   min={0}
+                  type="number"
                   step={0.5}
                   {...register('quantity')}
                   placeholder="e.g., 1, 1.5"
