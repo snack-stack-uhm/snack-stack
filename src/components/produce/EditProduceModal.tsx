@@ -77,6 +77,9 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
   const [showPicker, setShowPicker] = useState(false);
   const [imageAlt, setImageAlt] = useState('');
 
+  // State for reset confirmation modal
+  const [showConfirmReset, setShowConfirmReset] = useState(false);
+
   // RHF setup
   const {
     register,
@@ -456,15 +459,14 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
             </Col>
             <Col xs={6}>
               <Button
-                type="button"
                 variant="warning"
-                onClick={() => {
-                  const ok = window.confirm('Are you sure you want to reset?');
-                  if (ok) reset();
-                }}
                 className="btn-reset"
+                onClick={() => {
+                  reset(mapProduceToFormValues(produce));
+                  onHide();
+                }}
               >
-                Reset
+                Cancel
               </Button>
             </Col>
           </Row>
