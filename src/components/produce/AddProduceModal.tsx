@@ -472,9 +472,11 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
                 <Form.Label className="mb-0">Expiration</Form.Label>
                 <Form.Control
                   type="date"
+                  placeholder="YYYY-MM-DD"
                   isInvalid={!!errors.expiration}
                   {...register('expiration')}
                 />
+                <Form.Text className="text-muted">Format: YYYY-MM-DD</Form.Text>
                 <Form.Control.Feedback type="invalid">
                   {errors.expiration?.message as string}
                 </Form.Control.Feedback>
