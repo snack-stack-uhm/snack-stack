@@ -60,7 +60,7 @@ export default function ResetPasswordPage() {
       <div className={styles.formWrapper}>
         <h1 className={styles.title}>Reset Password</h1>
         <p className={styles.descriptionCentered}>
-          Enter your new password below to reset your Pantry Pal account password.
+          Enter your new password below to reset your Snack Stack account password.
         </p>
         <form onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>

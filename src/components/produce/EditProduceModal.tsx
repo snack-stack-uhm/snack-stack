@@ -361,11 +361,11 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
                 <Form.Label className="mb-0">Restock Threshold</Form.Label>
                 <Form.Control
                   type="number"
+                  min={0}
                   step={0.5}
-                  min="0"
-                  {...register('restockThreshold')}
                   placeholder="e.g., 0.5"
                   isInvalid={!!errors.restockThreshold}
+                  {...register('restockThreshold')}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.restockThreshold?.message}

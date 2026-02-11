@@ -22,8 +22,8 @@ const About = () => (
             transition={{ duration: 0.6 }}
           >
             <Image
-              src="/pantrypals-logo.png"
-              alt="Pantry Pals Logo"
+              src="/snack-stack-logo.png"
+              alt="Snack Stack Logo"
               width={250}
               height={250}
               className="rounded-lg shadow"
@@ -42,11 +42,11 @@ const About = () => (
                 marginBottom: '1rem',
               }}
             >
-              About Pantry Pal
+              About Snack Stack
             </h1>
             <p style={{ fontSize: '1.1rem', lineHeight: '1.6' }}>
-              Pantry Pal is an application designed to help users keep track of
-              the food items they already have at home. With Pantry Pal you
+              Snack Stack is an application designed to help users keep track of
+              the food items they already have at home. With Snack Stack you
               can:
             </p>
             <ul
@@ -102,7 +102,7 @@ const About = () => (
               Why We Built It
             </h2>
             <p style={{ fontSize: '1.1rem', lineHeight: '1.6' }}>
-              Our team created Pantry Pal to address the common problem of food
+              Our team created Snack Stack to address the common problem of food
               waste and disorganization in the kitchen. We wanted to build a
               tool that would help people make the most of the food they have,
               reduce waste, and save money by avoiding unnecessary purchases.
@@ -130,7 +130,7 @@ const About = () => (
           <Col>
             <h2 style={{ marginBottom: '1rem' }}>Looking Ahead</h2>
             <p style={{ fontSize: '1.1rem', lineHeight: '1.6' }}>
-              We&apos;re excited about the future of Pantry Pal and have plans
+              We&apos;re excited about the future of Snack Stack and have plans
               to add even more features to make it an indispensable tool for
               home cooks. Some of the features we&apos;re considering include:
             </p>
@@ -142,7 +142,7 @@ const About = () => (
               <li>Notifications when an item is about to expire</li>
             </ul>
             <p style={{ marginTop: '1rem' }}>
-              We&apos;re committed to continuously improving Pantry Pal and
+              We&apos;re committed to continuously improving Snack Stack and
               making it the best it can be for our users.
             </p>
           </Col>
@@ -182,7 +182,7 @@ const About = () => (
               }}
             >
               Click to learn more about our development
-              process and our pantry pals team
+              process and our Snack Stack team
             </a>
           </Col>
         </Row>

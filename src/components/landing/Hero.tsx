@@ -28,8 +28,8 @@ export default function Hero() {
               whileHover={{ scale: 1.04, rotate: 0.8 }}
             >
               <Image
-                src="/pantrypals-logo.png"
-                alt="Pantry Pals Logo"
+                src="/snack-stack-logo.png"
+                alt="Snack Stack Logo"
                 width={420}
                 height={420}
                 style={{ backgroundColor: 'white' }}
@@ -49,7 +49,7 @@ export default function Hero() {
               >
                 Welcome to
                 {' '}
-                <span style={{ color: 'var(--fern-green)' }}>Pantry Pals</span>
+                <span style={{ color: 'var(--fern-green)' }}>Snack Stack</span>
               </motion.h1>
 
               <motion.p
