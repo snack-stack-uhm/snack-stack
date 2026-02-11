@@ -95,7 +95,6 @@ export default function AddToShoppingListModal({
         unit: data.unit || '',
         price,
         shoppingListId: Number(data.shoppingListId),
-        type: data.type,
       });
 
       swal('Success', 'Item added to your shopping list', 'success', { timer: 2000 });
