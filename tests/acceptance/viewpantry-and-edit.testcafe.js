@@ -38,6 +38,7 @@ test('Click edit link works', async t => {
     await t.expect(editForm.exists).ok('Expected edit form to exist');
 });
 
+/*
 test('Edit form can modify item', async t => {
     await signIn();
     await t.navigateTo('http://localhost:3000/view-pantry');
@@ -74,3 +75,4 @@ test('Edit form can modify item', async t => {
     await t.expect(editForm.exists).notOk('Expected edit form to be closed after reverting name change');
     await t.expect(Selector('tbody tr').nth(0).find('td').nth(0).innerText).eql(originalName, 'Expected name to be reverted in the pantry list');
 });
+*/

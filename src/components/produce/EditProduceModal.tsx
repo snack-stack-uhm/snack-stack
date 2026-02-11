@@ -147,7 +147,6 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
   };
 
   const onSubmit = async (data: ProduceValues) => {
-    handleClose();
     try {
       await editProduce({
         ...data,
@@ -158,15 +157,12 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
           : 0,
       });
       swal('Success', 'Your item has been updated', 'success', { timer: 2000 });
+      handleClose();
       router.refresh();
     } catch (err) {
-      console.error('editProduce failed:', err);
       swal('Error', 'Failed to update item', 'error');
-      router.refresh();
     }
   };
-
-  if (!show) return null; // unmount model DOM when closed
 
   return (
     <Modal show={show} onHide={onHide} centered>
