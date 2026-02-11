@@ -53,3 +53,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Failed to add item' }, { status: 500 });
   }
 }
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const owner = searchParams.get('owner');
+
+    if (!owner) {
+      return NextResponse.json({ error: 'owner is required' }, { status: 400 });
+    }
+
+    const lists = await prisma.shoppingList.findMany({
+      where: { owner },
+      select: { id: true, name: true },
+      orderBy: { createdAt: 'desc' }, // if you have createdAt
+    });
+
+    return NextResponse.json(lists, { status: 200 });
+  } catch (error: any) {
+    console.error('Error fetching shopping lists:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
