@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import swal from 'sweetalert';
+import '../../styles/buttons.css';
 
 type SL = { id: number; name: string };
 
@@ -113,10 +114,10 @@ export default function AddProduceToShoppingListModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide} disabled={saving}>
+        <Button className="btn-cancel" onClick={onHide} disabled={saving}>
           Cancel
         </Button>
-        <Button onClick={handleAdd} disabled={!shoppingListId || saving}>
+        <Button className="btn-submit" onClick={handleAdd} disabled={!shoppingListId || saving}>
           {saving ? 'Adding…' : 'Add'}
         </Button>
       </Modal.Footer>

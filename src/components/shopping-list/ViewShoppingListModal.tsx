@@ -7,6 +7,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
 import { BagCheckFill } from 'react-bootstrap-icons';
+import '../../styles/buttons.css';
 import AddToShoppingListModal from './AddToShoppingListModal';
 import EditShoppingListItemModal from './EditShoppingListItemModal';
 import AddShoppingListItemToPantryModal from './AddShoppingListItemToPantryModal';
@@ -225,8 +226,14 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList, owner }: ViewShoppi
           <Row className="pt-4">
             <Col className="text-center">
               <Button
-                variant="success"
-                style={{ backgroundColor: 'var(--vibrant-orange)' }}
+                onClick={onHide}
+                className="btn-cancel"
+              >
+                Close
+              </Button>
+            </Col>
+            <Col className="text-center">
+              <Button
                 className="btn-submit"
                 onClick={() => {
                   onHide();
@@ -234,11 +241,6 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList, owner }: ViewShoppi
                 }}
               >
                 + Add Item
-              </Button>
-            </Col>
-            <Col className="text-center">
-              <Button onClick={onHide} variant="secondary" className="btn-submit">
-                Close
               </Button>
             </Col>
           </Row>

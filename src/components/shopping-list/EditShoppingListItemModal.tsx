@@ -2,6 +2,7 @@
 
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
+import '../../styles/buttons.css';
 
 type EditModalProps = {
   show: boolean;
@@ -136,11 +137,11 @@ export default function EditShoppingListItemModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
+        <Button className="btn-cancel" onClick={onHide}>
           Cancel
         </Button>
         <Button
-          style={{ backgroundColor: 'var(--vibrant-orange)' }}
+          className="btn-submit"
           onClick={handleSave}
         >
           Save Changes

@@ -32,24 +32,16 @@
 }
 
 .btn-submit:hover {
-    background-color: #E85D38;
+    background-color: #26A575;
     color: white;
     transform: translateY(-2px);
-}
-
-.btn-danger.btn-submit {
-  background-color: #dc3545 !important;
-  border-color: #dc3545 !important;
-}
-
-.btn-danger.btn-submit:hover {
-  background-color: #bb2d3b !important;
-  border-color: #b02a37 !important;
 }
 
 .btn-reset {
     width: 100%;
     padding: 12px;
+    background-color: var(--vibrant-orange);
+    color: white;
     font-size: 1rem;
     font-weight: bold;
     border: none;
@@ -60,7 +52,28 @@
 }
 
 .btn-reset:hover {
-    background-color: red;
+    background-color: #E85D38;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--vibrant-orange);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.btn-cancel:hover {
+    background-color: #E85D38;
+    color: white;
     transform: translateY(-2px);
 }
 

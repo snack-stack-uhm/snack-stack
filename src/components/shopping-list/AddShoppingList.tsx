@@ -79,22 +79,21 @@ export default function AddShoppingList({ show, onHide, owner }: Props) {
           <Row className="pt-3">
             <Col>
               <Button
-                type="submit"
-                disabled={isSubmitting}
+                type="button"
+                onClick={() => reset()}
                 style={{ backgroundColor: 'var(--vibrant-orange)' }}
-                className="btn-submit"
+                className="btn-reset"
               >
-                {isSubmitting ? 'Creating…' : 'Create'}
+                Reset
               </Button>
             </Col>
             <Col>
               <Button
-                type="button"
-                onClick={() => reset()}
-                variant="warning"
-                className="btn-reset"
+                type="submit"
+                disabled={isSubmitting}
+                className="btn-submit"
               >
-                Reset
+                {isSubmitting ? 'Creating…' : 'Create'}
               </Button>
             </Col>
           </Row>

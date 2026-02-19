@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
+import { Prisma } from '@prisma/client';
 
 // Minimal shape so TS knows about session.user.email
 type SessionLike = {
@@ -128,22 +129,29 @@ export async function createRecipe(input: RecipeInput) {
     email,
   );
 
-  return prisma.recipe.create({
-    data: {
-      ...recipeData,
-      ingredientItems:
-        ingredientItems.length > 0
-          ? {
-            create: ingredientItems.map((item) => ({
-              name: item.name,
-              quantity: item.quantity ?? null,
-              unit: item.unit ?? null,
-              order: item.order ?? 0,
-            })),
-          }
-          : undefined,
-    },
-  });
+  try {
+    return await prisma.recipe.create({
+      data: {
+        ...recipeData,
+        ingredientItems:
+          ingredientItems.length > 0
+            ? {
+              create: ingredientItems.map((item) => ({
+                name: item.name,
+                quantity: item.quantity ?? null,
+                unit: item.unit ?? null,
+                order: item.order ?? 0,
+              })),
+            }
+            : undefined,
+      },
+    });
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+      throw new Error('You already have a recipe with that title. Please use a different title.');
+    }
+    throw e;
+  }
 }
 
 /** Update an existing recipe (owner or admin@foo.com only). */
@@ -184,26 +192,33 @@ export async function updateRecipe(id: number, input: RecipeInput) {
 
   // If ingredientItems is empty, we leave existing ingredient rows as-is.
   // If ingredientItems has items, we replace them completely.
-  if (ingredientItems.length === 0) {
-    return prisma.recipe.update({
-      where: { id },
-      data: recipeData,
-    });
-  }
+  try {
+    if (ingredientItems.length === 0) {
+      return await prisma.recipe.update({
+        where: { id },
+        data: recipeData,
+      });
+    }
 
-  return prisma.recipe.update({
-    where: { id },
-    data: {
-      ...recipeData,
-      ingredientItems: {
-        deleteMany: {}, // delete all existing rows for this recipe
-        create: ingredientItems.map((item) => ({
-          name: item.name,
-          quantity: item.quantity ?? null,
-          unit: item.unit ?? null,
-          order: item.order ?? 0,
-        })),
+    return await prisma.recipe.update({
+      where: { id },
+      data: {
+        ...recipeData,
+        ingredientItems: {
+          deleteMany: {}, // delete all existing rows for this recipe
+          create: ingredientItems.map((item) => ({
+            name: item.name,
+            quantity: item.quantity ?? null,
+            unit: item.unit ?? null,
+            order: item.order ?? 0,
+          })),
+        },
       },
-    },
-  });
+    });
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+      throw new Error('You already have a recipe with that title. Please use a different title.');
+    }
+    throw e;
+  }
 }

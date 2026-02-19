@@ -451,8 +451,7 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
           <Row className="d-flex justify-content-between mt-4">
             <Col xs={6}>
               <Button
-                variant="danger"
-                className="btn-reset"
+                className="btn-cancel"
                 onClick={() => {
                   reset(mapProduceToFormValues(produce));
                   onHide();

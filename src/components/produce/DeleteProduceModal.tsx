@@ -47,8 +47,7 @@ const DeleteProduceModal = ({ show, onHide, produce }: DeleteProduceModalProps) 
           <Col className="text-center">
             <Button
               onClick={onHide}
-              variant="secondary"
-              className="btn-submit"
+              className="btn-cancel"
               disabled={isDeleting}
             >
               Cancel
@@ -57,7 +56,6 @@ const DeleteProduceModal = ({ show, onHide, produce }: DeleteProduceModalProps) 
           <Col className="text-center">
             <Button
               onClick={handleDelete}
-              variant="danger"
               className="btn-submit"
               disabled={isDeleting}
             >

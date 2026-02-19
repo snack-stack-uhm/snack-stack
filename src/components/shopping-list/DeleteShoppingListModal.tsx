@@ -87,8 +87,7 @@ const DeleteShoppingListModal = ({ show, onHide, shoppingList }: DeleteShoppingL
           <Col className="text-center">
             <Button
               onClick={onHide}
-              variant="secondary"
-              className="btn-submit"
+              className="btn-cancel"
               disabled={isDeleting || isPending}
             >
               Cancel
@@ -97,7 +96,6 @@ const DeleteShoppingListModal = ({ show, onHide, shoppingList }: DeleteShoppingL
           <Col className="text-center">
             <Button
               onClick={handleDelete}
-              variant="danger"
               className="btn-submit"
               disabled={isDeleting || isPending}
             >

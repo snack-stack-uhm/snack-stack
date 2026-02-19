@@ -210,18 +210,17 @@ export default function AddToShoppingListModal({
 
       <Row className="pt-3">
         <Col>
-          <Button type="submit" className="btn-submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Adding…' : 'Submit'}
-          </Button>
-        </Col>
-        <Col>
           <Button
             type="button"
             onClick={() => reset({ name: prefillName, type: 'weight', unit: '' })}
-            variant="warning"
             className="btn-reset"
           >
             Reset
+          </Button>
+        </Col>
+        <Col>
+          <Button type="submit" className="btn-submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Adding…' : 'Submit'}
           </Button>
         </Col>
       </Row>

@@ -81,18 +81,17 @@ export default function AddLocationModal({ show, onHide, owner }: AddLocationMod
 
           <Row className="d-flex justify-content-between mt-4">
             <Col xs={6}>
-              <Button type="submit" className="btn-submit">
-                Add
-              </Button>
-            </Col>
-            <Col xs={6}>
               <Button
                 type="button"
-                variant="warning"
                 onClick={() => reset()}
                 className="btn-reset"
               >
                 Reset
+              </Button>
+            </Col>
+            <Col xs={6}>
+              <Button type="submit" className="btn-submit">
+                Add
               </Button>
             </Col>
           </Row>

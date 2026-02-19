@@ -374,14 +374,18 @@ export default function EditRecipeModal({ show, onHide, recipe }: EditRecipeModa
             />
           </Form.Group>
 
-          <div className="d-flex justify-content-between mt-3">
-            <Button type="submit" className="btn-add" disabled={isPending}>
-              {isPending ? 'Saving…' : 'Save Changes'}
-            </Button>
-            <Button variant="secondary" type="button" onClick={onHide}>
-              Cancel
-            </Button>
-          </div>
+          <Row className="d-flex justify-content-between mt-4">
+            <Col xs={6}>
+              <Button className="btn-cancel" type="button" onClick={onHide}>
+                Cancel
+              </Button>
+            </Col>
+            <Col xs={6}>
+              <Button type="submit" className="btn-submit" disabled={isPending}>
+                {isPending ? 'Saving…' : 'Save Changes'}
+              </Button>
+            </Col>
+          </Row>
         </Form>
       </Modal.Body>
 
