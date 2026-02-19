@@ -176,7 +176,7 @@ const About = () => (
             <a
               href="https://pantry-pals.github.io/"
               style={{
-              color: 'var(--rich-brown)',
+                color: 'var(--rich-brown)',
                 fontSize: '1.1rem',
                 lineHeight: '1.6',
               }}
