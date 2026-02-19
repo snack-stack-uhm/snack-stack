@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 const About = () => (
   <main
     style={{
-      backgroundColor: 'var(--timberwolf)',
+      backgroundColor: 'var(--cream)',
       paddingTop: '2rem',
       paddingBottom: '2rem',
     }}
@@ -38,7 +38,7 @@ const About = () => (
           >
             <h1
               style={{
-                color: 'var(--fern-green)',
+                color: 'var(--vibrant-orange)',
                 marginBottom: '1rem',
               }}
             >
@@ -51,7 +51,7 @@ const About = () => (
             </p>
             <ul
               style={{
-                color: 'var(--hunter-green)',
+                color: 'var(--cozy-brown)',
                 fontSize: '1.05rem',
                 lineHeight: '1.6',
               }}
@@ -87,7 +87,7 @@ const About = () => (
         <Row
           className="mb-5"
           style={{
-            backgroundColor: 'var(--sage)',
+            backgroundColor: 'var(--light-peach)',
             borderRadius: '10px',
             padding: '2rem',
           }}
@@ -95,7 +95,7 @@ const About = () => (
           <Col>
             <h2
               style={{
-                color: 'var(--brunswick-green)',
+                color: 'var(--rich-brown)',
                 marginBottom: '1rem',
               }}
             >
@@ -121,7 +121,7 @@ const About = () => (
         <Row
           className="mb-5"
           style={{
-            backgroundColor: 'var(--fern-green)',
+            backgroundColor: 'var(--vibrant-orange)',
             color: 'white',
             borderRadius: '10px',
             padding: '2rem',
@@ -159,7 +159,7 @@ const About = () => (
         <Row
           className="mb-5"
           style={{
-            backgroundColor: 'var(--sage)',
+            backgroundColor: 'var(--light-peach)',
             borderRadius: '10px',
             padding: '2rem',
           }}
@@ -167,7 +167,7 @@ const About = () => (
           <Col>
             <h2
               style={{
-                color: 'var(--brunswick-green)',
+                color: 'var(--rich-brown)',
                 marginBottom: '1rem',
               }}
             >
@@ -176,7 +176,7 @@ const About = () => (
             <a
               href="https://pantry-pals.github.io/"
               style={{
-                color: 'var(--brunswick-green)',
+              color: 'var(--rich-brown)',
                 fontSize: '1.1rem',
                 lineHeight: '1.6',
               }}

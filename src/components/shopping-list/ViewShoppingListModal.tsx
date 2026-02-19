@@ -226,7 +226,7 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList, owner }: ViewShoppi
             <Col className="text-center">
               <Button
                 variant="success"
-                style={{ backgroundColor: 'var(--fern-green)' }}
+                style={{ backgroundColor: 'var(--vibrant-orange)' }}
                 className="btn-submit"
                 onClick={() => {
                   onHide();

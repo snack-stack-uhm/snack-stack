@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
-import { Saira } from 'next/font/google';
+import { Fredoka } from 'next/font/google';
 import './globals.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Footer from '@/components/Footer';
 import NavBar from '@/components/Navbar';
 import Providers from './providers';
 
-const saira = Saira({ subsets: ['latin'] });
+const fredoka = Fredoka({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Snack Stack',
@@ -18,7 +18,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const classString = `${saira.className} wrapper`;
+  const classString = `${fredoka.className} wrapper`;
   return (
     <html lang="en">
       <body className={classString}>

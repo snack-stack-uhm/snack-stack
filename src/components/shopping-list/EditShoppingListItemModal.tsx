@@ -140,7 +140,7 @@ export default function EditShoppingListItemModal({
           Cancel
         </Button>
         <Button
-          style={{ backgroundColor: 'var(--fern-green)' }}
+          style={{ backgroundColor: 'var(--vibrant-orange)' }}
           onClick={handleSave}
         >
           Save Changes

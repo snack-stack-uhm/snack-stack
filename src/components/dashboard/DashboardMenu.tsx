@@ -23,19 +23,19 @@ export default function DashboardMenu({ ownerEmail, recipes, produce }: Dashboar
       label: 'View Pantry',
       href: '/view-pantry',
       icon: <BoxSeam size={38} />,
-      color: 'var(--hunter-green)',
+      color: 'var(--vibrant-orange)',
     },
     {
       label: 'Shopping List',
       href: '/shopping-list',
       icon: <CartCheck size={38} />,
-      color: 'var(--hunter-green)',
+      color: 'var(--playful-green)',
     },
     {
       label: 'Recipes',
       href: '/recipes',
       icon: <BookHalf size={38} />,
-      color: 'var(--hunter-green)',
+      color: 'var(--cozy-brown)',
     },
   ];
 
@@ -46,18 +46,18 @@ export default function DashboardMenu({ ownerEmail, recipes, produce }: Dashboar
           <motion.div variants={parent} initial="hidden" animate="show">
             <motion.h1
               className="fw-bold mb-3"
-              style={{ color: 'var(--brunswick-green)' }}
+              style={{ color: 'var(--rich-brown)' }}
               variants={item}
             >
               Welcome to your
               {' '}
-              <span style={{ color: 'var(--fern-green)' }}>Dashboard</span>
+              <span style={{ color: 'var(--vibrant-orange)' }}>Dashboard</span>
             </motion.h1>
 
             <motion.p
               className="mb-4"
               style={{
-                color: 'var(--hunter-green)',
+                color: 'var(--cozy-brown)',
                 fontSize: '1rem',
               }}
               variants={item}

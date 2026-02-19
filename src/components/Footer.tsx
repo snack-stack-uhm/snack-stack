@@ -17,7 +17,7 @@ const Footer = () => {
           {/* Company Info */}
           <Col md={4} lg={3} className="mb-4 mb-md-0">
             <Link href="/" className="navbar-brand d-flex align-items-center mb-2">
-              <div className="p-1 me-4 rounded" style={{ backgroundColor: 'var(--timberwolf)' }}>
+              <div className="p-1 me-4 rounded" style={{ backgroundColor: 'var(--cream)' }}>
                 <Image
                   src={imgSrc}
                   alt="Snack Stack Logo"

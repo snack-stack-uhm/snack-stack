@@ -81,7 +81,7 @@ export default function AddShoppingList({ show, onHide, owner }: Props) {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                style={{ backgroundColor: 'var(--fern-green)' }}
+                style={{ backgroundColor: 'var(--vibrant-orange)' }}
                 className="btn-submit"
               >
                 {isSubmitting ? 'Creating…' : 'Create'}

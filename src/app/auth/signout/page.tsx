@@ -37,7 +37,7 @@ export default function SignOutPage() {
             type="button"
             data-testid="signout-button"
             className={styles.button}
-            style={{ backgroundColor: 'var(--fern-green)' }}
+            style={{ backgroundColor: 'var(--vibrant-orange)' }}
             onClick={handleSignOut}
             disabled={isSigningOut}
           >
@@ -48,8 +48,8 @@ export default function SignOutPage() {
             type="button"
             className={styles.button}
             style={{
-              backgroundColor: 'var(--sage)',
-              color: 'var(--brunswick-green)',
+              backgroundColor: 'var(--playful-green)',
+              color: 'var(--rich-brown)',
             }}
             onClick={() => router.push('/dashboard')}
             disabled={isSigningOut}
