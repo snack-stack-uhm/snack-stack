@@ -450,13 +450,8 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
           {/* Buttons */}
           <Row className="d-flex justify-content-between mt-4">
             <Col xs={6}>
-              <Button type="submit" className="btn-submit">
-                Save Changes
-              </Button>
-            </Col>
-            <Col xs={6}>
               <Button
-                variant="warning"
+                variant="danger"
                 className="btn-reset"
                 onClick={() => {
                   reset(mapProduceToFormValues(produce));
@@ -464,6 +459,11 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
                 }}
               >
                 Cancel
+              </Button>
+            </Col>
+            <Col xs={6}>
+              <Button type="submit" className="btn-submit">
+                Save Changes
               </Button>
             </Col>
           </Row>
