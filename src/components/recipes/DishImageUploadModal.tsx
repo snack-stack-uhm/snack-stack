@@ -9,6 +9,7 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { storage, db } from '@/lib/firebase';
 import swal from 'sweetalert';
 import Image from 'next/image';
+import '@/styles/buttons.css';
 
 type Props = {
   show: boolean;
@@ -155,11 +156,11 @@ export default function DishImageUploadModal({
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose} disabled={uploading}>
+        <Button className="btn-cancel" onClick={handleClose} disabled={uploading}>
           Cancel
         </Button>
         <Button
-          variant="success"
+          className="btn-submit"
           onClick={handleUpload}
           disabled={!file || !userEmail || uploading}
         >

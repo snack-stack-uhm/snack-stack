@@ -529,18 +529,17 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
 
           <Row className="d-flex justify-content-between mt-4">
             <Col xs={6}>
-              <Button type="submit" className="btn-submit">
-                Submit
-              </Button>
-            </Col>
-            <Col xs={6}>
               <Button
                 type="button"
-                variant="warning"
                 onClick={() => setShowConfirmReset(true)}
                 className="btn-reset"
               >
                 Reset
+              </Button>
+            </Col>
+            <Col xs={6}>
+              <Button type="submit" className="btn-submit">
+                Submit
               </Button>
 
               <Modal show={showConfirmReset} onHide={() => setShowConfirmReset(false)} centered>
@@ -549,11 +548,11 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
                 </Modal.Header>
                 <Modal.Body>Are you sure you want to reset?</Modal.Body>
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={() => setShowConfirmReset(false)}>
+                  <Button className="btn-cancel" onClick={() => setShowConfirmReset(false)}>
                     Cancel
                   </Button>
                   <Button
-                    variant="warning"
+                    className="btn-submit"
                     onClick={() => {
                       resetFormState();
                       setShowConfirmReset(false);

@@ -30,7 +30,7 @@ export default function Features() {
     <section
       style={{
         padding: '6rem 2rem',
-        backgroundColor: 'var(--timberwolf)',
+        backgroundColor: 'var(--cream)',
       }}
     >
       <div
@@ -67,7 +67,7 @@ export default function Features() {
                 fontWeight: 600,
                 fontSize: '1.25rem',
                 marginBottom: '1rem',
-                color: 'var(--brunswick-green)',
+                color: 'var(--rich-brown)',
               }}
             >
               {feature.title}
@@ -75,7 +75,7 @@ export default function Features() {
             <p
               style={{
                 fontSize: '1rem',
-                color: 'var(--hunter-green)',
+                color: 'var(--cozy-brown)',
                 lineHeight: 1.5,
               }}
             >

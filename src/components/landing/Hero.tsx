@@ -14,7 +14,7 @@ export default function Hero() {
   const item = { hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { duration: 0.45 } } };
 
   return (
-    <section className="py-5" style={{ backgroundColor: 'var(--timberwolf)' }}>
+    <section className="py-5" style={{ backgroundColor: 'var(--cream)' }}>
       <div className="container">
         <div className="row align-items-center">
           {/* Left: Logo */}
@@ -44,17 +44,17 @@ export default function Hero() {
             <motion.div variants={parent} initial="hidden" animate="show">
               <motion.h1
                 className="fw-bold mb-3"
-                style={{ color: 'var(--brunswick-green)' }}
+                style={{ color: 'var(--rich-brown)' }}
                 variants={item}
               >
                 Welcome to
                 {' '}
-                <span style={{ color: 'var(--fern-green)' }}>Snack Stack</span>
+                <span style={{ color: 'var(--vibrant-orange)' }}>Snack Stack</span>
               </motion.h1>
 
               <motion.p
                 className="mb-4"
-                style={{ color: 'var(--hunter-green)', fontSize: '1.1rem' }}
+                style={{ color: 'var(--cozy-brown)', fontSize: '1.1rem' }}
                 variants={item}
               >
                 Keep track of your pantry, cut down on food waste, and discover

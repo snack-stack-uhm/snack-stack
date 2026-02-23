@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: var(--timberwolf);
+  background-color: var(--cream);
   padding: 20px;
   position: relative;
 }
@@ -24,14 +24,14 @@
 
 .title {
   font-size: 1.8rem;
-  color: var(--hunter-green);
+  color: var(--rich-brown);
   margin-bottom: 15px;
   font-weight: bold;
 }
 
 .descriptionCentered {
   font-size: 1rem;
-  color: var(--fern-green);
+  color: var(--vibrant-orange);
   margin: 10px 0 20px;
 }
 
@@ -44,14 +44,14 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.9rem;
-  color: var(--brunswick-green);
+  color: var(--cozy-brown);
   margin-bottom: 5px;
   font-weight: 500;
 }
 
 .forgotPassword a {
   font-size: 0.85rem;
-  color: var(--fern-green);
+  color: var(--vibrant-orange);
   text-decoration: none;
 }
 
@@ -62,23 +62,23 @@
 .input {
   width: 100%;
   padding: 10px;
-  border: 1px solid var(--fern-green);
+  border: 1px solid var(--vibrant-orange);
   border-radius: 5px;
   font-size: 0.9rem;
   background-color: #fff;
-  color: var(--brunswick-green);
+  color: var(--cozy-brown);
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--hunter-green);
-  box-shadow: 0 0 5px rgba(58, 90, 64, 0.3);
+  border-color: var(--vibrant-orange);
+  box-shadow: 0 0 5px rgba(255, 112, 67, 0.3);
 }
 
 .button {
   width: 100%;
   padding: 12px;
-  background-color: var(--hunter-green);
+  background-color: var(--vibrant-orange);
   color: white;
   font-size: 1rem;
   font-weight: bold;
@@ -90,7 +90,7 @@
 }
 
 .button:hover {
-  background-color: var(--fern-green);
+  background-color: #E85D38;
   transform: translateY(-2px);
 }
 
@@ -107,13 +107,13 @@
 .accountPromptWrapper {
   font-size: 0.9rem;
   margin-top: 20px;
-  color: var(--brunswick-green);
+  color: var(--cozy-brown);
   text-align: center;
 }
 
 .logIn {
   font-size: 0.85rem;
-  color: var(--fern-green);
+  color: var(--vibrant-orange);
   font-weight: bold;
   text-decoration: none;
 }
@@ -141,19 +141,19 @@
 
 .verificationPopup h2 {
   font-size: 1.6rem;
-  color: var(--hunter-green);
+  color: var(--rich-brown);
   margin-bottom: 15px;
   font-weight: bold;
 }
 
 .verificationPopup p {
   font-size: 1rem;
-  color: var(--fern-green);
+  color: var(--cozy-brown);
   margin-bottom: 15px;
 }
 
 .verificationPopup strong {
-  color: var(--hunter-green);
+  color: var(--rich-brown);
 }
 
 .verificationPopup .input {
@@ -169,8 +169,8 @@
   width: 100%;
   padding: 10px;
   background-color: transparent;
-  color: var(--hunter-green);
-  border: 2px solid var(--hunter-green);
+  color: var(--vibrant-orange);
+  border: 2px solid var(--vibrant-orange);
   border-radius: 8px;
   font-size: 0.95rem;
   font-weight: bold;
@@ -179,7 +179,7 @@
 }
 
 .resendButton:hover {
-  background-color: var(--hunter-green);
+  background-color: var(--vibrant-orange);
   color: #fff;
   transform: translateY(-1px);
 }

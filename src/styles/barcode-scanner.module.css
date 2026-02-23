@@ -4,22 +4,22 @@
   align-items: center;
   padding: 1rem;
   border-radius: 0.5rem;
-  background-color: var(--brunswick-green);
-  color: var(--timberwolf);
+  background-color: var(--cozy-brown);
+  color: var(--cream);
 }
 
 .video {
   width: 100%;
   max-width: 400px;
   border-radius: 8px;
-  border: 2px solid var(--fern-green);
+  border: 2px solid var(--vibrant-orange);
 }
 
 .closeButton {
   margin-top: 1rem;
-  background-color: var(--fern-green);
-  border-color: var(--sage);
-  color: var(--timberwolf);
+  background-color: var(--vibrant-orange);
+  border-color: var(--playful-green);
+  color: white;
   font-weight: bold;
   padding: 0.5rem 1.2rem;
   border-radius: 6px;
@@ -27,7 +27,7 @@
 }
 
 .closeButton:hover {
-  background-color: var(--sage);
+  background-color: #E85D38;
 }
 
 .errorText {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import '../../styles/buttons.css';
 
 interface SettingsModalProps {
   show: boolean;
@@ -109,8 +110,8 @@ export default function RecommendedSettingsModal({
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>Cancel</Button>
-          <Button type="submit" variant="primary">Save</Button>
+          <Button className="btn-cancel" onClick={onHide}>Cancel</Button>
+          <Button type="submit" className="btn-submit">Save</Button>
         </Modal.Footer>
       </Form>
     </Modal>

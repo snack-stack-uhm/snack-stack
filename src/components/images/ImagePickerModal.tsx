@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Modal, Form, InputGroup, Button, Spinner, Row, Col, Image } from 'react-bootstrap';
+import '@/styles/buttons.css';
 
 type SearchImage = {
   id: string;
@@ -104,7 +105,7 @@ export default function ImagePickerModal({ show, onClose, onSelect }: Props) {
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>Close</Button>
+        <Button className="btn-cancel" onClick={onClose}>Close</Button>
       </Modal.Footer>
     </Modal>
   );

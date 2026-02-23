@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import swal from 'sweetalert';
 import { upsertProduceSet } from '@/lib/dbActions';
+import '../../styles/buttons.css';
 
 type ShoppingListItem = {
   id: number;
@@ -153,10 +154,10 @@ export default function AddShoppingListItemToPantryModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide} disabled={saving}>
+        <Button className="btn-cancel" onClick={onHide} disabled={saving}>
           Cancel
         </Button>
-        <Button onClick={handleAdd} disabled={!item || !selectedLocation || !owner || saving}>
+        <Button className="btn-submit" onClick={handleAdd} disabled={!item || !selectedLocation || !owner || saving}>
           {saving ? 'Adding...' : 'Add'}
         </Button>
       </Modal.Footer>

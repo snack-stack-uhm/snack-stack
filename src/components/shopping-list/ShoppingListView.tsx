@@ -41,7 +41,7 @@ export default function ShoppingListView({ initialShoppingLists }: ShoppingListV
           <Button
             onClick={() => setShow(true)}
             style={{
-              backgroundColor: 'var(--fern-green)',
+              backgroundColor: 'var(--vibrant-orange)',
               height: '34px',
               padding: '4px 12px',
               display: 'flex',
@@ -64,7 +64,7 @@ export default function ShoppingListView({ initialShoppingLists }: ShoppingListV
           <Button
             onClick={() => setShowCreateList(true)}
             style={{
-              backgroundColor: 'var(--fern-green)',
+              backgroundColor: 'var(--vibrant-orange)',
               height: '34px',
               padding: '4px 12px',
               display: 'flex',
