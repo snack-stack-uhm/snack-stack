@@ -130,7 +130,7 @@ export async function createRecipe(input: RecipeInput) {
   );
 
   try {
-    return await prisma.recipe.create({
+    const created = await prisma.recipe.create({
       data: {
         ...recipeData,
         ingredientItems:
@@ -146,6 +146,7 @@ export async function createRecipe(input: RecipeInput) {
             : undefined,
       },
     });
+    return created;
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
       throw new Error('You already have a recipe with that title. Please use a different title.');
@@ -193,28 +194,30 @@ export async function updateRecipe(id: number, input: RecipeInput) {
   // If ingredientItems is empty, we leave existing ingredient rows as-is.
   // If ingredientItems has items, we replace them completely.
   try {
+    let updated;
     if (ingredientItems.length === 0) {
-      return await prisma.recipe.update({
+      updated = await prisma.recipe.update({
         where: { id },
         data: recipeData,
       });
-    }
-
-    return await prisma.recipe.update({
-      where: { id },
-      data: {
-        ...recipeData,
-        ingredientItems: {
-          deleteMany: {}, // delete all existing rows for this recipe
-          create: ingredientItems.map((item) => ({
-            name: item.name,
-            quantity: item.quantity ?? null,
-            unit: item.unit ?? null,
-            order: item.order ?? 0,
-          })),
+    } else {
+      updated = await prisma.recipe.update({
+        where: { id },
+        data: {
+          ...recipeData,
+          ingredientItems: {
+            deleteMany: {}, // delete all existing rows for this recipe
+            create: ingredientItems.map((item) => ({
+              name: item.name,
+              quantity: item.quantity ?? null,
+              unit: item.unit ?? null,
+              order: item.order ?? 0,
+            })),
+          },
         },
-      },
-    });
+      });
+    }
+    return updated;
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
       throw new Error('You already have a recipe with that title. Please use a different title.');
