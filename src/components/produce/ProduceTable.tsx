@@ -2,31 +2,18 @@
 
 import { Table } from 'react-bootstrap';
 import type { ProduceRelations } from '@/types/ProduceRelations';
-import { useEffect, useState } from 'react';
 import ProduceItem from './ProduceItem';
 
-const ProduceTable = ({ rows }: { rows: ProduceRelations[] }) => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  return (
-    <div style={{ overflowX: 'auto', width: '100%' }}>
+const ProduceTable = ({ rows }: { rows: ProduceRelations[] }) => (
+  <div>
+    <div className="produce-table-desktop" style={{ overflowX: 'auto', width: '100%' }}>
       <Table
         striped
         bordered
         hover
         style={{
           textAlign: 'center',
-          tableLayout: isMobile ? 'auto' : 'fixed',
+          tableLayout: 'fixed',
           width: '100%',
           verticalAlign: 'middle',
         }}
@@ -41,7 +28,6 @@ const ProduceTable = ({ rows }: { rows: ProduceRelations[] }) => {
             <th>Restock At</th>
             <th>Expiration</th>
             <th>Actions</th>
-
           </tr>
         </thead>
         <tbody>
@@ -57,7 +43,22 @@ const ProduceTable = ({ rows }: { rows: ProduceRelations[] }) => {
         </tbody>
       </Table>
     </div>
-  );
-};
+
+    <div className="produce-table-mobile">
+      {rows.length ? (
+        rows.map((p) => (
+          <ProduceItem
+            key={p.id}
+            {...p}
+            restockThreshold={p.restockThreshold ?? 1}
+            layout="mobile"
+          />
+        ))
+      ) : (
+        <div className="text-center py-3">No items found</div>
+      )}
+    </div>
+  </div>
+);
 
 export default ProduceTable;

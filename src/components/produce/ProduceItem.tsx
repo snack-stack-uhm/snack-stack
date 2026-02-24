@@ -192,64 +192,86 @@ const ProduceItem = ({
   owner,
   image,
   restockThreshold = 1,
-}: ProduceRelations & { restockThreshold?: number }) => {
+  layout = 'table',
+}: ProduceRelations & { restockThreshold?: number; layout?: 'table' | 'mobile' }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [showAddToListModal, setShowAddToListModal] = useState(false);
 
   const safeRestock = restockThreshold ?? 1;
+  const locationName = (typeof location === 'object' ? location?.name : location) || 'N/A';
+  const storageName = (typeof storage === 'object' ? storage?.name : storage) || 'N/A';
+  const quantityText = `${quantity}${unit ? ` ${unit}` : ''}`;
+  const restockText = `${safeRestock}${unit ? ` ${unit}` : ''}`;
+  const expirationText = expiration ? new Date(expiration).toLocaleDateString('en-US') : 'N/A';
+  const typeLabel = type || 'N/A';
+
+  const actions = (
+    <>
+      <Button className="btn-edit" onClick={() => setShowEditModal(true)} title="Edit">
+        <PencilSquare color="white" size={18} />
+      </Button>
+
+      <Button
+        variant="danger"
+        className="btn-delete"
+        onClick={() => setShowDeleteModal(true)}
+        title="Delete"
+      >
+        <Trash color="white" size={18} />
+      </Button>
+
+      <Button
+        variant="success"
+        size="sm"
+        className="btn-submit"
+        onClick={() => setShowAddToListModal(true)}
+        title="Add to Shopping List"
+      >
+        Add
+      </Button>
+    </>
+  );
 
   return (
     <>
-      <tr>
-        <td>{name}</td>
+      {layout === 'mobile' ? (
+        <div className="produce-mobile-item">
+          <div className="produce-mobile-header">
+            <div className="produce-mobile-name">{name}</div>
+            <div className="produce-mobile-actions">{actions}</div>
+          </div>
+          <div className="produce-mobile-meta">
+            <span>{`Category: ${typeLabel}`}</span>
+            <span>{`Location: ${locationName}`}</span>
+            <span>{`Storage: ${storageName}`}</span>
+            <span>{`Quantity: ${quantityText}`}</span>
+            <span>{`Restock at: ${restockText}`}</span>
+            <span>{`Expiration: ${expirationText}`}</span>
+          </div>
+        </div>
+      ) : (
+        <tr>
+          <td>{name}</td>
 
-        <td>{type}</td>
+          <td>{typeLabel}</td>
 
-        <td>{(typeof location === 'object' ? location?.name : location) || 'N/A'}</td>
+          <td>{locationName}</td>
 
-        <td>{(typeof storage === 'object' ? storage?.name : storage) || 'N/A'}</td>
+          <td>{storageName}</td>
 
-        <td>
-          {quantity.toString()}
-          {unit ? ` ${unit}` : ''}
-        </td>
+          <td>{quantityText}</td>
 
-        <td>
-          {safeRestock}
-          {unit ? ` ${unit}` : ''}
-        </td>
+          <td>{restockText}</td>
 
-        <td>
-          {expiration ? new Date(expiration).toLocaleDateString('en-US') : 'N/A'}
-        </td>
+          <td>{expirationText}</td>
 
-        <td style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-          <Button className="btn-edit" onClick={() => setShowEditModal(true)} title="Edit">
-            <PencilSquare color="white" size={18} />
-          </Button>
-
-          <Button
-            variant="danger"
-            className="btn-delete"
-            onClick={() => setShowDeleteModal(true)}
-            title="Delete"
-          >
-            <Trash color="white" size={18} />
-          </Button>
-
-          <Button
-            variant="success"
-            size="sm"
-            className="btn-submit"
-            onClick={() => setShowAddToListModal(true)}
-            title="Add to Shopping List"
-          >
-            Add
-          </Button>
-        </td>
-      </tr>
+          <td style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+            {actions}
+          </td>
+        </tr>
+      )}
 
       <EditProduceModal
         show={showEditModal}
@@ -302,6 +324,7 @@ const ProduceItem = ({
 
 ProduceItem.defaultProps = {
   restockThreshold: 1,
+  layout: 'table',
 };
 
 export default ProduceItem;
