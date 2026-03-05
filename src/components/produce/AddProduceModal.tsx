@@ -60,12 +60,20 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
   const [locations, setLocations] = useState<string[]>([]);
   const [storageOptions, setStorageOptions] = useState<string[]>([]);
 
-  const unitOptions = useMemo(
-    () => ['kg', 'g', 'lb', 'oz', 'pcs', 'ml', 'l', 'Other'],
-    [],
-  );
+  const UNIT_OPTIONS: Record<string, string[]> = {
+    weight: ['oz', 'lb', 'kg'],
+    volume: ['fl oz', 'L', 'gal'],
+    count: ['pcs', 'pack'],
+  };
 
-  const router = useRouter();
+  const CATEGORY_TO_TYPE: Record<string, keyof typeof UNIT_OPTIONS> = {
+    meat: 'weight',
+    produce: 'weight',
+    dairy: 'volume',
+    beverage: 'volume',
+    snack: 'count',
+    canned: 'count',
+  };
 
   const {
     register,
@@ -91,6 +99,14 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
       restockThreshold: null,
     },
   });
+
+  const selectedType = watch('type');
+  const unitOptions = useMemo(() => {
+    const typeKey = CATEGORY_TO_TYPE[selectedType?.toLowerCase()];
+    return typeKey ? [...UNIT_OPTIONS[typeKey], 'Other'] : ['Other'];
+  }, [selectedType]);
+
+  const router = useRouter();
 
   const imageVal = watch('image') || '';
   const [selectedLocation, setSelectedLocation] = useState('');
@@ -276,13 +292,19 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
             <Col xs={6}>
               <Form.Group>
                 <Form.Label className="mb-0 required-field">Category</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="e.g., Meat"
+                <Form.Select
+                  {...register('type', { required: true })}
+                  value={selectedType}
                   isInvalid={!!errors.type}
-                  {...register('type')}
-                  required
-                />
+                  onChange={(e) => setValue('type', e.target.value)}
+                >
+                  <option value="" disabled>Select category...</option>
+                  {Object.keys(CATEGORY_TO_TYPE).map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    </option>
+                  ))}
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
                   {errors.type?.message as string}
                 </Form.Control.Feedback>

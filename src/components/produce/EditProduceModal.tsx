@@ -65,7 +65,7 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
   const [selectedStorage, setSelectedStorage] = useState(produce.storage?.name || '');
 
   const unitOptions = useMemo(
-    () => ['kg', 'g', 'lb', 'oz', 'pcs', 'ml', 'l', 'Other'],
+    () => ['oz', 'lb', 'kg', 'fl oz', 'L', 'gal', 'pcs', 'pack', 'Other'],
     [],
   );
 
@@ -202,7 +202,7 @@ export default function EditProduceModal({ show, onHide, produce }: EditProduceM
             </Col>
             <Col xs={6}>
               <Form.Group>
-                <Form.Label className="mb-0 required-field">Type</Form.Label>
+                <Form.Label className="mb-0 required-field">Category</Form.Label>
                 <Form.Control
                   type="text"
                   {...register('type')}
