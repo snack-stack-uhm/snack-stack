@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Button,
   Col,
@@ -115,6 +115,9 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
   const [showScanner, setShowScanner] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [imageAlt, setImageAlt] = useState('');
+  const [showManualBarcodeInput, setShowManualBarcodeInput] = useState(false);
+  const [manualBarcode, setManualBarcode] = useState('');
+  const manualBarcodeInputRef = useRef<HTMLInputElement | null>(null);
 
   // State for reset confirmation modal
   const [showConfirmReset, setShowConfirmReset] = useState(false);
@@ -137,7 +140,15 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
     setUnitChoice('');
     setStorageOptions([]);
     setImageAlt('');
+    setShowManualBarcodeInput(false);
+    setManualBarcode('');
   }, [produce?.owner, reset]);
+
+  useEffect(() => {
+    if (showManualBarcodeInput) {
+      manualBarcodeInputRef.current?.focus();
+    }
+  }, [showManualBarcodeInput]);
 
   const fetchStorage = useCallback(
     async (location: string) => {
@@ -210,6 +221,20 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
     }
   };
 
+  const submitManualBarcode = async () => {
+    const trimmed = manualBarcode.trim();
+    if (!trimmed) return;
+
+    if (!/^\d+$/.test(trimmed)) {
+      await swal('Invalid barcode', 'Please enter numbers only.', 'warning');
+      return;
+    }
+
+    await fetchProductByBarcode(trimmed);
+    setShowManualBarcodeInput(false);
+    setManualBarcode('');
+  };
+
   const onSubmit: SubmitHandler<ProduceValues> = async (data) => {
     try {
       // Normalize payload for your DB action.
@@ -265,9 +290,47 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
                     await fetchProductByBarcode(code);
                     setShowScanner(false);
                   }}
+                  onManualAdd={() => {
+                    setShowScanner(false);
+                    setShowManualBarcodeInput(true);
+                  }}
                   onClose={() => setShowScanner(false)}
                 />
                 )}
+
+                {showManualBarcodeInput && (
+                  <div className="mt-2">
+                    <InputGroup size="sm">
+                      <Form.Control
+                        ref={manualBarcodeInputRef}
+                        type="text"
+                        value={manualBarcode}
+                        placeholder="Enter barcode number"
+                        onChange={(e) => setManualBarcode(e.target.value)}
+                        onKeyDown={async (e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            await submitManualBarcode();
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline-secondary"
+                        onClick={() => {
+                          setShowManualBarcodeInput(false);
+                          setManualBarcode('');
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button type="button" variant="primary" onClick={submitManualBarcode}>
+                        Search
+                      </Button>
+                    </InputGroup>
+                  </div>
+                )}
+
               </div>
             </Col>
           </Row>
