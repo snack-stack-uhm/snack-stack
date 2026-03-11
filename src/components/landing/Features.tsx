@@ -1,97 +1,70 @@
 'use client';
 
 import Image from 'next/image';
+import { Card, Col, Container, Row } from 'react-bootstrap';
+import styles from '@/styles/landing-features.module.css';
 
 const features = [
   {
     title: 'Track Your Pantry',
     description: 'Easily keep track of your pantry, fridge, freezer, and spices, so you always know what you have.',
-    icon: '/apple.png',
+    icon: '/fridge.png',
   },
   {
     title: 'Reduce Food Waste',
     description: 'Get expiration reminders and suggestions to finish food before it spoils.',
-    icon: '/banana.png',
+    icon: '/avocado.png',
   },
   {
     title: 'Generate Shopping Lists',
     description: 'Automatically create shopping lists based on low or missing items in your pantry.',
-    icon: '/carrot.png',
+    icon: '/cart.png',
   },
   {
     title: 'Discover Recipes',
     description: 'Find recipes based on ingredients you already have, reducing waste and meal prep stress.',
-    icon: '/chickenbreast.png',
+    icon: '/pasta.png',
   },
 ];
 
 export default function Features() {
   return (
-    <section
-      style={{
-        padding: '6rem 2rem',
-        backgroundColor: 'var(--cream)',
-      }}
-    >
-      <div
-        style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '2.5rem',
-        }}
-      >
-        {features.map((feature) => (
-          <div
-            key={feature.title}
-            style={{
-              background: 'white',
-              borderRadius: '1rem',
-              padding: '2rem',
-              textAlign: 'center',
-              boxShadow: '0 6px 18px rgba(0,0,0,0.08)',
-              transition: 'transform 0.3s, box-shadow 0.3s',
-            }}
-            className="hover-card"
-          >
-            <Image
-              src={feature.icon}
-              alt={feature.title}
-              width={80}
-              height={80}
-              style={{ marginBottom: '1.5rem' }}
-            />
-            <h3
-              style={{
-                fontWeight: 600,
-                fontSize: '1.25rem',
-                marginBottom: '1rem',
-                color: 'var(--rich-brown)',
-              }}
-            >
-              {feature.title}
-            </h3>
-            <p
-              style={{
-                fontSize: '1rem',
-                color: 'var(--cozy-brown)',
-                lineHeight: 1.5,
-              }}
-            >
-              {feature.description}
-            </p>
-          </div>
-        ))}
-      </div>
-      <style>
-        {`
-        .hover-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-        }
-      `}
-      </style>
+    <section className={styles.section}>
+      <Container>
+        <div className={styles.sectionHeader}>
+          <p className={styles.kicker}>Why Snack Stack</p>
+          <h2 className={styles.heading}>Everything You Need In One Place</h2>
+          <p className={styles.subheading}>
+            Keep your current routine, but make it easier to manage ingredients,
+            meals, and shopping in a single flow.
+          </p>
+        </div>
+
+        <Row className="g-3 g-lg-4 justify-content-center">
+          {features.map((feature) => (
+            <Col key={feature.title} xs={12} lg={6}>
+              <Card className={`${styles.card} h-100`}>
+                <Card.Body className={styles.cardBody}>
+                  <div className={styles.iconWrap}>
+                    <Image
+                      src={feature.icon}
+                      alt={feature.title}
+                      width={50}
+                      height={50}
+                      className={styles.icon}
+                    />
+                  </div>
+
+                  <div className={styles.content}>
+                    <Card.Title as="h3" className={styles.cardTitle}>{feature.title}</Card.Title>
+                    <Card.Text className={styles.cardText}>{feature.description}</Card.Text>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
     </section>
   );
 }

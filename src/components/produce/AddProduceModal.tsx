@@ -56,24 +56,24 @@ interface AddProduceModalProps {
   };
 }
 
+const UNIT_OPTIONS: Record<string, string[]> = {
+  weight: ['oz', 'lb', 'kg'],
+  volume: ['fl oz', 'L', 'gal'],
+  count: ['pcs', 'pack'],
+};
+
+const CATEGORY_TO_TYPE: Record<string, keyof typeof UNIT_OPTIONS> = {
+  meat: 'weight',
+  produce: 'weight',
+  dairy: 'volume',
+  beverage: 'volume',
+  snack: 'count',
+  canned: 'count',
+};
+
 export default function AddProduceModal({ show, onHide, produce }: AddProduceModalProps) {
   const [locations, setLocations] = useState<string[]>([]);
   const [storageOptions, setStorageOptions] = useState<string[]>([]);
-
-  const UNIT_OPTIONS: Record<string, string[]> = {
-    weight: ['oz', 'lb', 'kg'],
-    volume: ['fl oz', 'L', 'gal'],
-    count: ['pcs', 'pack'],
-  };
-
-  const CATEGORY_TO_TYPE: Record<string, keyof typeof UNIT_OPTIONS> = {
-    meat: 'weight',
-    produce: 'weight',
-    dairy: 'volume',
-    beverage: 'volume',
-    snack: 'count',
-    canned: 'count',
-  };
 
   const {
     register,
