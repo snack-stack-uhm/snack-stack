@@ -213,11 +213,14 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
         setValue('name', product.product_name || '');
         setValue('image', product.image_url || '');
         setValue('type', (product.categories_tags?.[0]?.replace('en:', '') || '') as string);
-      } else {
-        await swal('Not found', 'No product found for this barcode', 'warning');
+        return true;
       }
+
+      await swal('Not found', 'No product found for this barcode', 'warning');
+      return false;
     } catch {
       await swal('Error', 'Failed to fetch product info', 'error');
+      return false;
     }
   };
 
@@ -230,9 +233,11 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
       return;
     }
 
-    await fetchProductByBarcode(trimmed);
-    setShowManualBarcodeInput(false);
-    setManualBarcode('');
+    const found = await fetchProductByBarcode(trimmed);
+    if (found) {
+      setShowManualBarcodeInput(false);
+      setManualBarcode('');
+    }
   };
 
   const onSubmit: SubmitHandler<ProduceValues> = async (data) => {
