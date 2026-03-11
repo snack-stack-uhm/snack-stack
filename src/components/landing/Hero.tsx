@@ -60,7 +60,10 @@ export default function Hero() {
                 recipes with what you already have. Smarter cooking, simplified.
               </motion.p>
 
-              <motion.div className="d-flex gap-3 justify-content-center justify-content-lg-start flex-wrap" variants={item}>
+              <motion.div
+                className="d-flex gap-3 justify-content-center justify-content-lg-start flex-wrap"
+                variants={item}
+              >
                 {!isLoading && (
                   !session ? (
                     <>
