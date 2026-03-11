@@ -174,7 +174,7 @@ const About = () => (
               Learn More
             </h2>
             <a
-              href="https://pantry-pals.github.io/"
+              href="https://snack-stack-uhm.github.io/"
               style={{
                 color: 'var(--rich-brown)',
                 fontSize: '1.1rem',

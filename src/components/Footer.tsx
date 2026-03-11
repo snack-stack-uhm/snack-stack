@@ -77,11 +77,11 @@ const Footer = () => {
               </li>
               <li className="d-flex align-items-center mb-2">
                 <Envelope className="me-2 flex-shrink-0" />
-                <span>pantrypal808@gmail.com</span>
+                <span>snackstack@gmail.com</span>
               </li>
               <li className="d-flex align-items-center">
                 <a
-                  href="https://github.com/pantry-pals"
+                  href="https://snack-stack-uhm.github.io/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="nav-link p-0 d-inline-flex align-items-center"
