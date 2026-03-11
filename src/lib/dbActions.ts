@@ -141,7 +141,7 @@ export async function addProduce(produce: {
     }
   }
 
-  redirect('/view-pantry');
+  return newProduce;
 }
 
 export async function upsertProduceSet(produce: {
