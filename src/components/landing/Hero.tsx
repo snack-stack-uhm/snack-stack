@@ -18,7 +18,7 @@ export default function Hero() {
     <section className={styles.heroSection}>
       <Container>
         <Row className="align-items-center g-4">
-          <Col lg={6} className="order-2 order-lg-1">
+          <Col lg={6} className="order-1 order-lg-1">
             <motion.div
               className={styles.logoShell}
               initial={{ opacity: 0, scale: 0.96 }}
@@ -37,7 +37,7 @@ export default function Hero() {
             </motion.div>
           </Col>
 
-          <Col lg={6} className="order-1 order-lg-2 text-center text-lg-start">
+          <Col lg={6} className="order-2 order-lg-2 text-center text-lg-start">
             <motion.div variants={parent} initial="hidden" animate="show">
               <motion.p className={styles.eyebrow} variants={item}>
                 Pantry Management Made Easy
