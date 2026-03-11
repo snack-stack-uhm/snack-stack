@@ -135,6 +135,7 @@ export async function addProduce(produce: {
           name: newProduce.name,
           quantity: newProduce.restockThreshold ?? 1,
           unit: newProduce.unit,
+          type: newProduce.type,
           price: null,
         },
       });
@@ -270,6 +271,7 @@ export async function editProduce(
           name: updatedProduce.name,
           quantity: updatedProduce.restockThreshold ?? 1,
           unit: updatedProduce.unit,
+          type: updatedProduce.type,
           price: null,
         },
       });
@@ -377,6 +379,7 @@ export async function addShoppingListItem(data: {
   name: string;
   quantity: number;
   unit?: string;
+  type?: string;
   price?: number;
   shoppingListId: number;
 }) {
@@ -385,6 +388,7 @@ export async function addShoppingListItem(data: {
       name: data.name,
       quantity: data.quantity,
       unit: data.unit || '',
+      type: data.type || '',
       price: data.price ?? null,
       shoppingListId: data.shoppingListId,
     },
@@ -402,6 +406,7 @@ export async function editShoppingListItem(
     name?: string;
     quantity?: number;
     unit?: string | null;
+    type?: string | null;
     price?: number | null;
     restockTrigger?: string | null;
     customThreshold?: number | null;
@@ -413,6 +418,7 @@ export async function editShoppingListItem(
       ...(item.name !== undefined && { name: item.name }),
       ...(item.quantity !== undefined && { quantity: item.quantity }),
       ...(item.unit !== undefined && { unit: item.unit }),
+      ...(item.type !== undefined && { type: item.type }),
       ...(item.price !== undefined && { price: item.price }),
       ...(item.restockTrigger !== undefined && {
         restockTrigger: item.restockTrigger,

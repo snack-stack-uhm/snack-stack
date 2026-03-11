@@ -109,6 +109,7 @@ model ShoppingListItem {
   name            String // name of the item (not linked to pantry)
   quantity        Float
   unit            String?
+  type            String?
   price           Decimal? @db.Decimal(10, 2)
   restockTrigger  String?
   customThreshold Float?

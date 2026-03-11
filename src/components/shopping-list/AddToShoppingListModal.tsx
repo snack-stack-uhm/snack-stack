@@ -5,10 +5,11 @@ import { useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { AddShoppingListItemSchema } from '@/lib/validationSchemas';
 import { addShoppingListItem } from '@/lib/dbActions';
+import { CATEGORY_OPTIONS, getUnitOptionsForCategory, formatCategoryLabel } from '@/lib/unitMappings';
 
 // ------- types -------
 type SL = { id: number; name: string };
@@ -41,20 +42,11 @@ export default function AddToShoppingListModal({
   const { data: session } = useSession();
   const owner = session?.user?.email;
 
-  // --- State for selected Item Type ---
-  const [selectedType, setSelectedType] = useState('weight');
-
-  // Map of units per type
-  const unitOptions: Record<string, string[]> = {
-    weight: ['oz', 'lb', 'kg'],
-    liquid: ['fl oz', 'L', 'gal'],
-    count: ['pcs', 'pack'],
-  };
-
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
     setValue,
   } = useForm<AddItemValues>({
@@ -65,18 +57,42 @@ export default function AddToShoppingListModal({
       unit: '',
       price: 0,
       shoppingListId: shoppingLists[0]?.id ?? 0,
-      type: 'weight',
+      type: '',
     },
   });
 
+  const selectedCategory = watch('type') || '';
+  const [unitChoice, setUnitChoice] = useState('');
+
+  const unitOptions = useMemo(
+    () => getUnitOptionsForCategory(selectedCategory),
+    [selectedCategory],
+  );
+
   useEffect(() => {
-    if (!show) reset({ name: prefillName, type: 'weight', unit: '' });
-    setSelectedType('weight');
-  }, [show, reset, prefillName]);
+    if (!show) {
+      reset({
+        name: prefillName,
+        quantity: 0,
+        unit: '',
+        price: 0,
+        shoppingListId: shoppingLists[0]?.id ?? 0,
+        type: '',
+      });
+      setUnitChoice('');
+    }
+  }, [show, reset, prefillName, shoppingLists]);
 
   const handleClose = () => {
-    reset({ name: prefillName, type: 'weight', unit: '' });
-    setSelectedType('weight');
+    reset({
+      name: prefillName,
+      quantity: 0,
+      unit: '',
+      price: 0,
+      shoppingListId: shoppingLists[0]?.id ?? 0,
+      type: '',
+    });
+    setUnitChoice('');
     onHide();
   };
 
@@ -93,6 +109,7 @@ export default function AddToShoppingListModal({
         name: data.name.trim(),
         quantity: Number(data.quantity),
         unit: data.unit || '',
+        type: data.type || '',
         price,
         shoppingListId: Number(data.shoppingListId),
       });
@@ -111,7 +128,7 @@ export default function AddToShoppingListModal({
       <Row className="mb-3">
         <Col xs={4}>
           <Form.Group>
-            <Form.Label>Item Name</Form.Label>
+            <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
               placeholder="e.g., Bananas"
@@ -137,19 +154,25 @@ export default function AddToShoppingListModal({
 
         <Col xs={3}>
           <Form.Group>
-            <Form.Label>Item Type</Form.Label>
+            <Form.Label>Category</Form.Label>
             <Form.Select
               {...register('type')}
-              value={selectedType}
+              value={selectedCategory}
               onChange={(e) => {
-                setSelectedType(e.target.value);
-                setValue('type', e.target.value);
-                setValue('unit', ''); // reset unit when type changes
+                const { value } = e.target;
+                setValue('type', value, { shouldValidate: true });
+                setUnitChoice('');
+                setValue('unit', '', { shouldValidate: true });
               }}
             >
-              <option value="weight">Weight</option>
-              <option value="liquid">Liquid</option>
-              <option value="count">Count</option>
+              <option value="" disabled>
+                Select category...
+              </option>
+              {CATEGORY_OPTIONS.map((cat) => (
+                <option key={cat} value={cat}>
+                  {formatCategoryLabel(cat)}
+                </option>
+              ))}
             </Form.Select>
           </Form.Group>
         </Col>
@@ -157,16 +180,33 @@ export default function AddToShoppingListModal({
         <Col xs={3}>
           <Form.Group>
             <Form.Label>Unit</Form.Label>
-            <Form.Select {...register('unit')} value={undefined}>
+            <Form.Select
+              value={unitChoice}
+              onChange={(e) => {
+                const { value } = e.target;
+                setUnitChoice(value);
+                setValue('unit', value === 'Other' ? '' : value, { shouldValidate: true });
+              }}
+              disabled={!selectedCategory}
+            >
               <option value="" disabled>
-                Select unit…
+                Select unit...
               </option>
-              {unitOptions[selectedType].map((u) => (
+              {unitOptions.map((u) => (
                 <option key={u} value={u}>
                   {u}
                 </option>
               ))}
             </Form.Select>
+
+            {unitChoice === 'Other' && (
+            <Form.Control
+              type="text"
+              className="mt-2"
+              placeholder="Enter custom unit"
+              {...register('unit')}
+            />
+            )}
           </Form.Group>
         </Col>
       </Row>
@@ -212,7 +252,17 @@ export default function AddToShoppingListModal({
         <Col>
           <Button
             type="button"
-            onClick={() => reset({ name: prefillName, type: 'weight', unit: '' })}
+            onClick={() => {
+              reset({
+                name: prefillName,
+                quantity: 0,
+                unit: '',
+                price: 0,
+                shoppingListId: shoppingLists[0]?.id ?? 0,
+                type: '',
+              });
+              setUnitChoice('');
+            }}
             className="btn-reset"
           >
             Reset

@@ -17,6 +17,7 @@ import { AddProduceSchema } from '@/lib/validationSchemas';
 import { addProduce } from '@/lib/dbActions';
 import { useRouter } from 'next/navigation';
 import ImagePickerModal from '@/components/images/ImagePickerModal';
+import { CATEGORY_OPTIONS, getUnitOptionsForCategory, formatCategoryLabel } from '@/lib/unitMappings';
 import BarcodeScanner from './BarcodeScanner';
 import '../../styles/buttons.css';
 
@@ -56,21 +57,6 @@ interface AddProduceModalProps {
   };
 }
 
-const UNIT_OPTIONS: Record<string, string[]> = {
-  weight: ['oz', 'lb', 'kg'],
-  volume: ['fl oz', 'L', 'gal'],
-  count: ['pcs', 'pack'],
-};
-
-const CATEGORY_TO_TYPE: Record<string, keyof typeof UNIT_OPTIONS> = {
-  meat: 'weight',
-  produce: 'weight',
-  dairy: 'volume',
-  beverage: 'volume',
-  snack: 'count',
-  canned: 'count',
-};
-
 export default function AddProduceModal({ show, onHide, produce }: AddProduceModalProps) {
   const [locations, setLocations] = useState<string[]>([]);
   const [storageOptions, setStorageOptions] = useState<string[]>([]);
@@ -101,10 +87,7 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
   });
 
   const selectedType = watch('type');
-  const unitOptions = useMemo(() => {
-    const typeKey = CATEGORY_TO_TYPE[selectedType?.toLowerCase()];
-    return typeKey ? [...UNIT_OPTIONS[typeKey], 'Other'] : ['Other'];
-  }, [selectedType]);
+  const unitOptions = useMemo(() => getUnitOptionsForCategory(selectedType), [selectedType]);
 
   const router = useRouter();
 
@@ -367,9 +350,9 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
                   onChange={(e) => setValue('type', e.target.value)}
                 >
                   <option value="" disabled>Select category...</option>
-                  {Object.keys(CATEGORY_TO_TYPE).map((cat) => (
+                  {CATEGORY_OPTIONS.map((cat) => (
                     <option key={cat} value={cat}>
-                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                      {formatCategoryLabel(cat)}
                     </option>
                   ))}
                 </Form.Select>

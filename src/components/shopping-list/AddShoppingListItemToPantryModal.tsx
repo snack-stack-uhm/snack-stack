@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import swal from 'sweetalert';
 import { upsertProduceSet } from '@/lib/dbActions';
+import { CATEGORY_OPTIONS, getUnitOptionsForCategory, formatCategoryLabel } from '@/lib/unitMappings';
 import '../../styles/buttons.css';
 
 type ShoppingListItem = {
@@ -11,6 +12,7 @@ type ShoppingListItem = {
   name: string;
   quantity: number;
   unit?: string | null;
+  type?: string | null;
   price?: number | null;
 };
 
@@ -35,6 +37,15 @@ export default function AddShoppingListItemToPantryModal({
   const [moveQty, setMoveQty] = useState(1);
   const [, setQtyError] = useState<string | null>(null);
 
+  const [selectedType, setSelectedType] = useState(item?.type ?? '');
+  const [unitChoice, setUnitChoice] = useState('');
+  const [customUnit, setCustomUnit] = useState('');
+
+  const unitOptions = useMemo(
+    () => getUnitOptionsForCategory(selectedType),
+    [selectedType],
+  );
+
   useEffect(() => {
     if (!show) return;
 
@@ -55,6 +66,20 @@ export default function AddShoppingListItemToPantryModal({
       const data = (await res.json()) as string[];
       setLocations(data);
       setSelectedLocation((prev) => prev || data[0] || '');
+
+      setSelectedType(item?.type ?? '');
+
+      const initialUnit = item?.unit ?? '';
+      if (initialUnit && getUnitOptionsForCategory(item?.type ?? '').includes(initialUnit)) {
+        setUnitChoice(initialUnit);
+        setCustomUnit('');
+      } else if (initialUnit) {
+        setUnitChoice('Other');
+        setCustomUnit(initialUnit);
+      } else {
+        setUnitChoice('');
+        setCustomUnit('');
+      }
     })();
   }, [show, owner, item?.id, item?.quantity]);
 
@@ -78,16 +103,28 @@ export default function AddShoppingListItemToPantryModal({
 
     const qty = rawQty;
 
+    const resolvedUnit = unitChoice === 'Other' ? customUnit.trim() : unitChoice;
+
+    if (!selectedType) {
+      await swal({ title: 'Missing category', text: 'Please select a category.', icon: 'error' });
+      return;
+    }
+
+    if (!resolvedUnit) {
+      await swal({ title: 'Missing unit', text: 'Please select a unit.', icon: 'error' });
+      return;
+    }
+
     try {
       setSaving(true);
 
       await upsertProduceSet({
         name: item.name,
-        type: 'Other',
+        type: selectedType,
         location: selectedLocation,
         storage: 'Pantry',
         quantity: qty,
-        unit: item.unit ?? 'pcs',
+        unit: resolvedUnit,
         expiration: null,
         owner,
         image: null,
@@ -138,6 +175,57 @@ export default function AddShoppingListItemToPantryModal({
           ))}
         </Form.Select>
 
+        <Form.Label className="mb-1 mt-3">Category</Form.Label>
+        <Form.Select
+          value={selectedType}
+          onChange={(e) => {
+            setSelectedType(e.target.value);
+            setUnitChoice('');
+            setCustomUnit('');
+          }}
+        >
+          <option value="" disabled>
+            Select category...
+          </option>
+          {CATEGORY_OPTIONS.map((cat) => (
+            <option key={cat} value={cat}>
+              {formatCategoryLabel(cat)}
+            </option>
+          ))}
+        </Form.Select>
+
+        <Form.Label className="mb-1 mt-3">Unit</Form.Label>
+        <Form.Select
+          value={unitChoice}
+          onChange={(e) => {
+            const { value } = e.target;
+            setUnitChoice(value);
+            if (value !== 'Other') {
+              setCustomUnit('');
+            }
+          }}
+          disabled={!selectedType}
+        >
+          <option value="" disabled>
+            Select unit...
+          </option>
+          {unitOptions.map((u) => (
+            <option key={u} value={u}>
+              {u}
+            </option>
+          ))}
+        </Form.Select>
+
+        {unitChoice === 'Other' && (
+        <Form.Control
+          className="mt-2"
+          type="text"
+          placeholder="Enter custom unit"
+          value={customUnit}
+          onChange={(e) => setCustomUnit(e.target.value)}
+        />
+        )}
+
         <Form.Label className="mb-1 mt-3">Quantity to move</Form.Label>
         <Form.Control
           type="number"
@@ -157,7 +245,18 @@ export default function AddShoppingListItemToPantryModal({
         <Button className="btn-cancel" onClick={onHide} disabled={saving}>
           Cancel
         </Button>
-        <Button className="btn-submit" onClick={handleAdd} disabled={!item || !selectedLocation || !owner || saving}>
+        <Button
+          className="btn-submit"
+          onClick={handleAdd}
+          disabled={
+            !item
+            || !selectedLocation
+            || !owner
+            || !selectedType
+            || !unitChoice
+            || saving
+          }
+        >
           {saving ? 'Adding...' : 'Add'}
         </Button>
       </Modal.Footer>
