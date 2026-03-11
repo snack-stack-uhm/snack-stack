@@ -6,15 +6,15 @@ import ProduceItem from './ProduceItem';
 
 const ProduceTable = ({ rows }: { rows: ProduceRelations[] }) => (
   <div>
-    <div className="produce-table-desktop" style={{ overflowX: 'auto', width: '100%' }}>
+    <div className="produce-table-desktop" style={{ overflowX: 'auto', width: '112%' }}>
       <Table
         striped
         bordered
         hover
         style={{
           textAlign: 'center',
-          tableLayout: 'fixed',
-          width: '100%',
+          tableLayout: 'auto',
+          width: '90%',
           verticalAlign: 'middle',
         }}
       >
