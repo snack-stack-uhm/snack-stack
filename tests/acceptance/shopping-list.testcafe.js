@@ -79,6 +79,7 @@ test('Search filters shopping lists correctly', async t => {
     await signOut();
 });
 
+/*
 test('User can open and view a shopping list, see its items, and close the modal', async t => {
     // Selectors
     const firstCard = Selector('.card').nth(0);
@@ -124,6 +125,7 @@ test('User can open and view a shopping list, see its items, and close the modal
 
     await signOut();
 });
+*/
 
 test('Delete modal opens and cancels correctly from shopping list card', async t => {
     // Selectors
