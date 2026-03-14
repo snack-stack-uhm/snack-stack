@@ -61,19 +61,12 @@ export const EditShoppingListSchema = Yup.object({
 });
 
 export const AddShoppingListItemSchema = Yup.object({
-  name: Yup.string().required('Item name is required'),
-  quantity: Yup.number()
-    .typeError('Quantity must be a number')
-    .positive('Must be greater than 0')
-    .required('Quantity is required'),
+  name: Yup.string().required(),
+  quantity: Yup.number().required(),
   unit: Yup.string().optional(),
-  price: Yup.number()
-    .typeError('Price must be a number')
-    .optional()
-    .transform((_, val) => (val !== '' ? Number(val) : null)),
-  shoppingListId: Yup.number()
-    .typeError('A shopping list must be selected')
-    .required('Shopping list is required'),
+  type: Yup.string().optional(),
+  price: Yup.number().nullable().optional(),
+  shoppingListId: Yup.number().required(),
 });
 
 export const EditShoppingListItemSchema = Yup.object({

@@ -34,6 +34,7 @@ export async function PUT(
         name: body.name,
         quantity: body.quantity,
         unit: body.unit || null,
+        type: body.type || null,
         price: body.price ?? null,
         restockTrigger: body.restockTrigger ?? null,
         customThreshold: body.customThreshold ?? null,
@@ -59,12 +60,12 @@ export async function PATCH(request: Request, ctx: RouteContext) {
       name: string;
       quantity: number;
       unit: string | null;
+      type: string | null;
       price: number | null;
       restockTrigger: string | null;
       customThreshold: number | null;
     }>;
 
-    // Build a "data" object with only provided keys
     const data: any = {};
     if (body.name !== undefined) data.name = body.name;
     if (body.quantity !== undefined) {
@@ -74,7 +75,8 @@ export async function PATCH(request: Request, ctx: RouteContext) {
       }
       data.quantity = q;
     }
-    if (body.unit !== undefined) data.unit = body.unit ? body.unit : null; // '' -> null
+    if (body.unit !== undefined) data.unit = body.unit ? body.unit : null;
+    if (body.type !== undefined) data.type = body.type ? body.type : null;
     if (body.price !== undefined) data.price = body.price ?? null;
     if (body.restockTrigger !== undefined) data.restockTrigger = body.restockTrigger ?? null;
     if (body.customThreshold !== undefined) data.customThreshold = body.customThreshold ?? null;

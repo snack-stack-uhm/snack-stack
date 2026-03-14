@@ -1,8 +1,13 @@
 'use client';
 
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import '../../styles/buttons.css';
+import {
+  CATEGORY_OPTIONS,
+  getUnitOptionsForCategory,
+  formatCategoryLabel,
+} from '@/lib/unitMappings';
 
 type EditModalProps = {
   show: boolean;
@@ -12,30 +17,69 @@ type EditModalProps = {
     name: string;
     quantity: number;
     unit?: string | null;
+    type?: string | null;
     price?: number | null;
     restockTrigger?: string | null;
     customThreshold?: number | null;
   };
 };
 
+type FormState = {
+  name: string;
+  quantity: number;
+  unit: string;
+  type: string;
+  price: number | '';
+  restockTrigger: string;
+  customThreshold: number | '';
+};
+
+function buildFormState(item: EditModalProps['item']): FormState {
+  return {
+    name: item.name,
+    quantity: item.quantity,
+    unit: item.unit ?? '',
+    type: item.type ?? '',
+    price: item.price ?? '',
+    restockTrigger: item.restockTrigger ?? 'empty',
+    customThreshold: item.customThreshold ?? '',
+  };
+}
+
 export default function EditShoppingListItemModal({
   show,
   onHide,
   item,
 }: EditModalProps) {
-  const [form, setForm] = useState({
-    name: item.name,
-    quantity: item.quantity,
-    unit: item.unit ?? '',
-    price: item.price ?? '',
-    restockTrigger: item.restockTrigger ?? 'empty',
-    customThreshold: item.customThreshold ?? '',
-  });
+  const [form, setForm] = useState<FormState>(() => buildFormState(item));
+  const [unitChoice, setUnitChoice] = useState('');
 
-  // FIXED — works for all React-Bootstrap inputs
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const unitOptions = useMemo(
+    () => getUnitOptionsForCategory(form.type),
+    [form.type],
+  );
+
+  useEffect(() => {
+    const nextForm = buildFormState(item);
+    setForm(nextForm);
+
+    if (nextForm.unit && getUnitOptionsForCategory(nextForm.type).includes(nextForm.unit)) {
+      setUnitChoice(nextForm.unit);
+    } else if (nextForm.unit) {
+      setUnitChoice('Other');
+    } else {
+      setUnitChoice('');
+    }
+  }, [item, show]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSave = async () => {
@@ -43,11 +87,14 @@ export default function EditShoppingListItemModal({
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        ...form,
+        name: form.name.trim(),
         quantity: Number(form.quantity),
-        price: form.price ? Number(form.price) : null,
+        unit: unitChoice === 'Other' ? form.unit : unitChoice || form.unit || null,
+        type: form.type || null,
+        price: form.price === '' ? null : Number(form.price),
+        restockTrigger: form.restockTrigger,
         customThreshold:
-          form.restockTrigger === 'custom'
+          form.restockTrigger === 'custom' && form.customThreshold !== ''
             ? Number(form.customThreshold)
             : null,
       }),
@@ -65,7 +112,6 @@ export default function EditShoppingListItemModal({
 
       <Modal.Body>
         <Form>
-          {/* NAME */}
           <Form.Group>
             <Form.Label>Name</Form.Label>
             <Form.Control
@@ -75,29 +121,81 @@ export default function EditShoppingListItemModal({
             />
           </Form.Group>
 
-          {/* QTY + UNIT */}
           <Row className="mt-3">
             <Col>
               <Form.Label>Quantity</Form.Label>
               <Form.Control
                 name="quantity"
                 type="number"
+                min="0"
+                step="0.5"
                 value={form.quantity}
                 onChange={handleChange}
               />
             </Col>
 
             <Col>
-              <Form.Label>Unit</Form.Label>
-              <Form.Control
-                name="unit"
-                value={form.unit}
-                onChange={handleChange}
-              />
+              <Form.Label>Category</Form.Label>
+              <Form.Select
+                name="type"
+                value={form.type}
+                onChange={(e) => {
+                  const { value } = e.target;
+                  setForm((prev) => ({
+                    ...prev,
+                    type: value,
+                    unit: '',
+                  }));
+                  setUnitChoice('');
+                }}
+              >
+                <option value="" disabled>
+                  Select category...
+                </option>
+                {CATEGORY_OPTIONS.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {formatCategoryLabel(cat)}
+                  </option>
+                ))}
+              </Form.Select>
             </Col>
           </Row>
 
-          {/* PRICE */}
+          <Form.Group className="mt-3">
+            <Form.Label>Unit</Form.Label>
+            <Form.Select
+              value={unitChoice}
+              onChange={(e) => {
+                const { value } = e.target;
+                setUnitChoice(value);
+                setForm((prev) => ({
+                  ...prev,
+                  unit: value === 'Other' ? '' : value,
+                }));
+              }}
+              disabled={!form.type}
+            >
+              <option value="" disabled>
+                Select unit...
+              </option>
+              {unitOptions.map((u) => (
+                <option key={u} value={u}>
+                  {u}
+                </option>
+              ))}
+            </Form.Select>
+
+            {unitChoice === 'Other' && (
+              <Form.Control
+                className="mt-2"
+                name="unit"
+                value={form.unit}
+                onChange={handleChange}
+                placeholder="Enter custom unit"
+              />
+            )}
+          </Form.Group>
+
           <Form.Group className="mt-3">
             <Form.Label>Price</Form.Label>
             <Form.Control
@@ -109,7 +207,6 @@ export default function EditShoppingListItemModal({
             />
           </Form.Group>
 
-          {/* RESTOCK DROPDOWN */}
           <Form.Group className="mt-3">
             <Form.Label>Restock When</Form.Label>
             <Form.Select
@@ -137,10 +234,11 @@ export default function EditShoppingListItemModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <Button className="btn-cancel" onClick={onHide}>
+        <Button type="button" className="btn-cancel" onClick={onHide}>
           Cancel
         </Button>
         <Button
+          type="button"
           className="btn-submit"
           onClick={handleSave}
         >

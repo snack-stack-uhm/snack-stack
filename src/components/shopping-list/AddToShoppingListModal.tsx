@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Col, Form, Modal, Row, InputGroup, Offcanvas } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
+import { useForm, type Resolver, type SubmitHandler } from 'react-hook-form';
 import swal from 'sweetalert';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
@@ -50,7 +50,7 @@ export default function AddToShoppingListModal({
     formState: { errors, isSubmitting },
     setValue,
   } = useForm<AddItemValues>({
-    resolver: yupResolver(AddShoppingListItemSchema),
+    resolver: yupResolver(AddShoppingListItemSchema) as Resolver<AddItemValues>,
     defaultValues: {
       name: prefillName,
       quantity: 0,
@@ -96,7 +96,7 @@ export default function AddToShoppingListModal({
     onHide();
   };
 
-  const onSubmit = async (data: AddItemValues) => {
+  const onSubmit: SubmitHandler<AddItemValues> = async (data) => {
     if (!owner) {
       swal('Error', 'You must be signed in to add to your shopping list.', 'error');
       return;
