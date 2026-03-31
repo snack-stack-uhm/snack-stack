@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import { useSession } from 'next-auth/react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import AddShoppingList from './AddShoppingList';
@@ -18,8 +18,29 @@ export default function ShoppingListView({ initialShoppingLists }: ShoppingListV
   const [show, setShow] = useState(false);
   const [showCreateList, setShowCreateList] = useState(false);
 
-  const searchLower = searchTerm.toLowerCase();
-  const filteredLists = initialShoppingLists.filter((list) => list.name.toLowerCase().includes(searchLower));
+  const handleSearchChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(value);
+  };
+
+  const searchLower = searchTerm.toLowerCase().trim();
+
+  // Filter lists by name or any ingredient (list item) name
+  const filteredLists = initialShoppingLists.filter((list) => {
+    const matchesListName = list.name.toLowerCase().includes(searchLower);
+
+    const items = list.items ?? list.shoppingListItems ?? [];
+
+    const matchesIngredient = items.some((item: any) => {
+      const ingredientName = item.name
+        ?? item.ingredient?.name
+        ?? item.itemName
+        ?? '';
+
+      return ingredientName.toLowerCase().includes(searchLower);
+    });
+
+    return matchesListName || matchesIngredient;
+  });
 
   return (
     <>
@@ -31,9 +52,9 @@ export default function ShoppingListView({ initialShoppingLists }: ShoppingListV
         <Col xs={12} md={6} lg={4} className="mb-2">
           <Form.Control
             type="text"
-            placeholder="Search shopping lists..."
+            placeholder="Search shopping lists or ingredients..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
           />
         </Col>
 
@@ -90,7 +111,7 @@ export default function ShoppingListView({ initialShoppingLists }: ShoppingListV
           {filteredLists.length === 0 ? (
             <Row>
               <Col className="text-center">
-                <p className="text-muted">No shopping lists found. Create one to get started!</p>
+                <p className="text-muted">No matching list names or items. Create one to get started or add it!</p>
               </Col>
             </Row>
           ) : (
@@ -107,10 +128,10 @@ export default function ShoppingListView({ initialShoppingLists }: ShoppingListV
         {/* RIGHT SIDE — Recommended Items */}
         <Col xs={12} md={4} className="mt-4 mt-md-0">
           {session?.user?.email && (
-          <RecommendedWidget
-            owner={session?.user?.email ?? ''}
-            shoppingLists={initialShoppingLists}
-          />
+            <RecommendedWidget
+              owner={session?.user?.email ?? ''}
+              shoppingLists={initialShoppingLists}
+            />
           )}
         </Col>
       </Row>
