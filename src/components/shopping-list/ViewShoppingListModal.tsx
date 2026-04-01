@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
-import { BagCheckFill } from 'react-bootstrap-icons';
+import { BagCheckFill, PencilSquare, Trash, PlusSquare } from 'react-bootstrap-icons';
 import '../../styles/buttons.css';
 import AddToShoppingListModal from './AddToShoppingListModal';
 import EditShoppingListItemModal from './EditShoppingListItemModal';
@@ -189,7 +189,7 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList, owner }: ViewShoppi
                             size="sm"
                             onClick={() => setEditingItem(item)}
                           >
-                            Edit
+                            <PencilSquare color="white" size={15} />
                           </Button>
 
                           <Button
@@ -197,7 +197,7 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList, owner }: ViewShoppi
                             size="sm"
                             onClick={() => openAddToPantry(item)}
                           >
-                            Pantry+
+                            <PlusSquare color="white" size={15} />
                           </Button>
 
                           <Button
@@ -206,7 +206,7 @@ const ViewShoppingListModal = ({ show, onHide, shoppingList, owner }: ViewShoppi
                             onClick={() => handleDeleteItem(item.id)}
                             disabled={deletingItemId === item.id}
                           >
-                            {deletingItemId === item.id ? 'Deleting...' : 'Delete'}
+                            <Trash color="white" size={15} />
                           </Button>
                         </td>
                       </tr>
