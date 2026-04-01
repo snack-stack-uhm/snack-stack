@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { PencilSquare, Trash } from 'react-bootstrap-icons';
+import { PencilSquare, PlusSquare, Trash } from 'react-bootstrap-icons';
 
 import { ProduceRelations } from '@/types/ProduceRelations';
 import EditProduceModal from './EditProduceModal';
@@ -41,7 +41,7 @@ const ProduceItem = ({
         onClick={() => setShowEditModal(true)}
         title="Edit"
       >
-        <PencilSquare color="white" size={18} />
+        <PencilSquare color="white" size={20} />
       </Button>
 
       <Button
@@ -50,7 +50,7 @@ const ProduceItem = ({
         onClick={() => setShowDeleteModal(true)}
         title="Delete"
       >
-        <Trash color="white" size={18} />
+        <Trash color="white" size={20} />
       </Button>
 
       <Button
@@ -60,7 +60,7 @@ const ProduceItem = ({
         onClick={() => setShowAddToListModal(true)}
         title="Add to Shopping List"
       >
-        Add
+        <PlusSquare color="white" size={22} />
       </Button>
     </>
   );
