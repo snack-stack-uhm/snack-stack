@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { Row, Col, Button, Form } from 'react-bootstrap';
 import AddRecipeModal from '@/components/recipes/AddRecipeModal';
 import { useSession } from 'next-auth/react';
+import { createPantryMatcher } from '@/lib/matchIngredients';
 import RecipeCard from './RecipeCard';
 import '../../styles/buttons.css';
 
@@ -33,8 +34,8 @@ export default function RecipesClient({
   const [showAdd, setShowAdd] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
-  const pantryNames = useMemo(
-    () => new Set(produce.map((p) => p.name.toLowerCase())),
+  const hasIngredient = useMemo(
+    () => createPantryMatcher(produce.map((p) => p.name)),
     [produce],
   );
 
@@ -45,9 +46,9 @@ export default function RecipesClient({
       const items = r.ingredientItems ?? [];
       if (items.length === 0) return false;
 
-      return items.every((i: any) => pantryNames.has(i.name.toLowerCase()));
+      return items.every((i: any) => hasIngredient(i.name));
     });
-  }, [recipes, showCanMake, pantryNames]);
+  }, [recipes, showCanMake, hasIngredient]);
 
   const filteredRecipes = useMemo(() => {
     const query = search.toLowerCase();
@@ -153,7 +154,7 @@ export default function RecipesClient({
                   prepMinutes={r.prepMinutes ?? null}
                   cookMinutes={r.cookMinutes ?? null}
                   sourceUrl={r.sourceUrl ?? null}
-                  pantryNames={pantryNames}
+                  hasIngredient={hasIngredient}
                 />
               </Col>
             );

@@ -8,6 +8,7 @@ import { getUserProduceByEmail } from '@/lib/dbActions';
 import AddToShoppingList from '@/components/recipes/AddToShoppingList';
 import UploadDishButton from '@/components/recipes/UploadDishButton';
 import ViewDishImagesButton from '@/components/recipes/ViewDishImagesButton';
+import { createPantryMatcher } from '@/lib/matchIngredients';
 
 type PageProps = { params: Promise<{ id: string }> };
 export const dynamic = 'force-dynamic';
@@ -28,8 +29,8 @@ export default async function RecipeDetailPage({ params }: PageProps) {
     pantry = await getUserProduceByEmail(email);
   }
 
-  // Create a set of pantry item names (lowercase for case-insensitive matching)
-  const pantryNames = new Set(pantry.map((p) => p.name.toLowerCase()));
+  // Create matcher for pantry
+  const hasIngredient = createPantryMatcher(pantry.map((p) => p.name));
 
   const displayOwner = recipe.owner?.includes('admin@foo.com') ? ['Snack Stack Team'] : recipe.owner;
 
@@ -37,7 +38,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
   const ingredientItems = recipe.ingredientItems ?? [];
 
   // Missing item names (for AddToShoppingList)
-  const missingItems = ingredientItems.filter((item) => !pantryNames.has(item.name.toLowerCase()));
+  const missingItems = ingredientItems.filter((item) => !hasIngredient(item.name));
 
   return (
     <main style={{ backgroundColor: '#f8f9fa' }}>
@@ -278,7 +279,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
                   }}
                 >
                   {ingredientItems.map((item) => {
-                    const hasItem = pantryNames.has(item.name.toLowerCase());
+                    const hasItem = hasIngredient(item.name);
 
                     const parts: string[] = [];
                     if (item.quantity != null) {

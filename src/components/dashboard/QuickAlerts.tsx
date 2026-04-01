@@ -5,6 +5,8 @@ import { Card, Row, Col, Spinner, Badge } from 'react-bootstrap';
 import { Clock, Search, ExclamationTriangle } from 'react-bootstrap-icons';
 import Link from 'next/link';
 
+import { createPantryMatcher } from '@/lib/matchIngredients';
+
 type QuickAlertsProps = {
   ownerEmail: string;
   recipes: any[];
@@ -48,17 +50,17 @@ export default function QuickAlerts({ ownerEmail, recipes, produce }: QuickAlert
     };
   }, [ownerEmail]);
 
-  const pantryNames = useMemo(
-    () => new Set(produce.map((p) => p.name.toLowerCase())),
+  const hasIngredient = useMemo(
+    () => createPantryMatcher(produce.map((p) => p.name)),
     [produce],
   );
 
   const availableRecipes = useMemo(
     () => recipes.filter((r) => {
       const ingredients = Array.isArray(r.ingredients) ? r.ingredients : [];
-      return ingredients.length > 0 && ingredients.every((ing: string) => pantryNames.has(ing.toLowerCase()));
+      return ingredients.length > 0 && ingredients.every((ing: string) => hasIngredient(ing));
     }),
-    [recipes, pantryNames],
+    [recipes, hasIngredient],
   );
 
   const recipeCount = availableRecipes.length;
