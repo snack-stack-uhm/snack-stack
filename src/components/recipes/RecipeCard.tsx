@@ -33,7 +33,7 @@ export type RecipeCardProps = {
   prepMinutes?: number | null;
   cookMinutes?: number | null;
   sourceUrl?: string | null;
-  pantryNames: Set<string>;
+  hasIngredient: (name: string) => boolean;
 };
 
 export default function RecipeCard({
@@ -52,7 +52,7 @@ export default function RecipeCard({
   prepMinutes = null,
   cookMinutes = null,
   sourceUrl = null,
-  pantryNames,
+  hasIngredient,
 }: RecipeCardProps) {
   const dietTags = Array.isArray(dietary) ? dietary.filter(Boolean) : [];
   const router = useRouter();
@@ -156,7 +156,7 @@ export default function RecipeCard({
 
                 <div className="mt-1 d-flex flex-wrap gap-2">
                   {ingredientItems.map((item) => {
-                    const hasItem = pantryNames.has(item.name.toLowerCase());
+                    const hasItem = hasIngredient(item.name);
 
                     return (
                       <Badge
