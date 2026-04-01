@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import type { ProduceRelations } from '@/types/ProduceRelations';
 import SearchBarControls from './SearchBarControls';
@@ -9,7 +9,16 @@ import ProduceCardGrid from './ProduceCardGrid';
 import GroupedSections from './GroupedSections';
 
 const STORAGE_ORDER = ['freezer', 'fridge', 'pantry'] as const;
+const PANTRY_CONTROLS_STORAGE_KEY = 'snack-stack:pantry-controls';
 type ViewMode = 'table' | 'cards';
+type StoredPantryControls = {
+  search: string;
+  sort: SortType;
+  groupByStorage: boolean;
+  view: ViewMode;
+};
+const VALID_SORTS: SortType[] = ['', 'name-asc', 'cat-asc', 'expiration-soon', 'qty-desc', 'qty-asc'];
+const VALID_VIEWS: ViewMode[] = ['table', 'cards'];
 
 const toTime = (d: unknown): number => {
   if (!d) return Number.POSITIVE_INFINITY;
@@ -31,7 +40,7 @@ function sortProduce(arr: ProduceRelations[], sort: string): ProduceRelations[] 
     case 'name-asc':
       sorted.sort((a, b) => a.name.localeCompare(b.name));
       break;
-    case 'type-asc':
+    case 'cat-asc':
       sorted.sort((a, b) => (a.type ?? '').localeCompare(b.type ?? ''));
       break;
     case 'expiration-soon':
@@ -54,6 +63,38 @@ const ProduceListWithGrouping: React.FC<{ initialProduce: ProduceRelations[] }> 
   const [sort, setSort] = useState<SortType>('');
   const [groupByStorage, setGroupByStorage] = useState(false);
   const [view, setView] = useState<ViewMode>('table');
+  const [hasLoadedPreferences, setHasLoadedPreferences] = useState(false);
+
+  useEffect(() => {
+    try {
+      const savedControls = localStorage.getItem(PANTRY_CONTROLS_STORAGE_KEY);
+      if (!savedControls) return;
+
+      const parsed = JSON.parse(savedControls) as Partial<StoredPantryControls>;
+
+      if (typeof parsed.search === 'string') setSearch(parsed.search);
+      if (VALID_SORTS.includes(parsed.sort as SortType)) setSort(parsed.sort as SortType);
+      if (typeof parsed.groupByStorage === 'boolean') setGroupByStorage(parsed.groupByStorage);
+      if (VALID_VIEWS.includes(parsed.view as ViewMode)) setView(parsed.view as ViewMode);
+    } catch {
+      localStorage.removeItem(PANTRY_CONTROLS_STORAGE_KEY);
+    } finally {
+      setHasLoadedPreferences(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoadedPreferences) return;
+
+    const controls: StoredPantryControls = {
+      search,
+      sort,
+      groupByStorage,
+      view,
+    };
+
+    localStorage.setItem(PANTRY_CONTROLS_STORAGE_KEY, JSON.stringify(controls));
+  }, [groupByStorage, hasLoadedPreferences, search, sort, view]);
 
   const filteredSorted = useMemo(() => {
     const q = search.trim().toLowerCase();

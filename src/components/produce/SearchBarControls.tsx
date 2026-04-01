@@ -45,7 +45,7 @@ const SearchBarControls: React.FC<Props> = ({
     >
       <option value="">Sort by…</option>
       <option value="name-asc">Name (A–Z)</option>
-      <option value="type-cat">Category (A–Z)</option>
+      <option value="cat-asc">Category (A–Z)</option>
       <option value="expiration-soon">Expiration (Soonest)</option>
       <option value="qty-desc">Quantity (High → Low)</option>
       <option value="qty-asc">Quantity (Low → High)</option>
