@@ -18,4 +18,4 @@ Snack Stack is a web application designed to help users manage their pantry, sho
 
 ## Testing
 
-- Run tests using Playwright: `npx playwright test`n
+- Run tests using Playwright: `npx playwright test`
