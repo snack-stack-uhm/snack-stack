@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Card, Row, Col, Spinner, Badge } from 'react-bootstrap';
-import { Clock, Search, Cart, ExclamationTriangle } from 'react-bootstrap-icons';
+import { Clock, Search, ExclamationTriangle } from 'react-bootstrap-icons';
 import Link from 'next/link';
 
 type QuickAlertsProps = {
@@ -13,14 +13,12 @@ type QuickAlertsProps = {
 
 export default function QuickAlerts({ ownerEmail, recipes, produce }: QuickAlertsProps) {
   const [expiringItems, setExpiringItems] = useState<any[]>([]);
-  const [shoppingLists, setShoppingLists] = useState<any[]>([]);
   const [lowStockItems, setLowStockItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!ownerEmail) {
       setExpiringItems([]);
-      setShoppingLists([]);
       setLowStockItems([]);
       return () => {};
     }
@@ -28,14 +26,13 @@ export default function QuickAlerts({ ownerEmail, recipes, produce }: QuickAlert
     const fetchAlerts = async () => {
       setLoading(true);
       try {
-        const [expiringRes, shoppingRes, lowStockRes] = await Promise.all([
+        const [expiringRes, lowStockRes] = await Promise.all([
           fetch(`/api/expiring?owner=${encodeURIComponent(ownerEmail)}`),
           fetch(`/api/shopping-lists?owner=${encodeURIComponent(ownerEmail)}`),
           fetch(`/api/low-stock?owner=${encodeURIComponent(ownerEmail)}`),
         ]);
 
         if (expiringRes.ok) setExpiringItems((await expiringRes.json()).expiringItems || []);
-        if (shoppingRes.ok) setShoppingLists((await shoppingRes.json()).shoppingLists || []);
         if (lowStockRes.ok) setLowStockItems((await lowStockRes.json()).lowStockItems || []);
       } catch (err) {
         console.error('Error fetching alerts:', err);
@@ -65,25 +62,6 @@ export default function QuickAlerts({ ownerEmail, recipes, produce }: QuickAlert
   );
 
   const recipeCount = availableRecipes.length;
-
-  const getNextShoppingDate = () => {
-    if (shoppingLists.length === 0) return null;
-
-    const sorted = [...shoppingLists].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-
-    const lastShopping = new Date(sorted[0].createdAt);
-    const nextShopping = new Date(lastShopping);
-    nextShopping.setDate(nextShopping.getDate() + 7);
-
-    const today = new Date();
-    const diffDays = Math.ceil((nextShopping.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays <= 0) return 'Today';
-    if (diffDays === 1) return 'Tomorrow';
-    return `${diffDays} days`;
-  };
 
   if (loading) {
     return (
