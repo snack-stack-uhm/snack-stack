@@ -102,8 +102,6 @@ export default function QuickAlerts({ ownerEmail, recipes, produce }: QuickAlert
     );
   }
 
-  const nextShoppingDate = getNextShoppingDate();
-
   const formatExpiringText = () => {
     if (expiringItems.length === 0) return 'No items expiring soon';
     if (expiringItems.length === 1) return `${expiringItems[0].name} expires soon`;
@@ -194,15 +192,6 @@ export default function QuickAlerts({ ownerEmail, recipes, produce }: QuickAlert
     );
   };
 
-  const formatShoppingText = () => {
-    if (!nextShoppingDate) return 'No shopping lists due yet';
-    if (nextShoppingDate === 'Today'
-        || nextShoppingDate === 'Tomorrow') {
-      return `Weekly grocery trip scheduled for ${nextShoppingDate.toLowerCase()}`;
-    }
-    return `Next shopping trip in ${nextShoppingDate}`;
-  };
-
   return (
     <Card className="mb-4 shadow-sm border-light">
       <Card.Body>
@@ -211,7 +200,7 @@ export default function QuickAlerts({ ownerEmail, recipes, produce }: QuickAlert
           <Card.Title className="mb-0">Quick Alerts</Card.Title>
         </div>
 
-        <Row xs={1} md={4} className="g-4">
+        <Row xs={1} md={3} className="g-4">
           {/* Expiring Soon */}
           <Col>
             <Link href="/view-pantry" className="text-success text-decoration-none fw-semibold">
@@ -273,26 +262,6 @@ export default function QuickAlerts({ ownerEmail, recipes, produce }: QuickAlert
                     </Badge>
                   </div>
                   <Card.Text className="text-muted small mb-0">{formatRecipesText()}</Card.Text>
-                </Card.Body>
-              </Card>
-            </Link>
-          </Col>
-
-          {/* Shopping List Due */}
-          <Col>
-            <Link href="/shopping-list" className="text-danger text-decoration-none fw-semibold">
-              <Card className="h-100 border-start border-4 border-info shadow-sm">
-                <Card.Body>
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <div className="d-flex align-items-center">
-                      <Cart className="me-2 text-secondary" />
-                      <Card.Subtitle className="fw-semibold text-dark">Shopping List Due</Card.Subtitle>
-                    </div>
-                    <Badge bg="info" text="dark">
-                      {nextShoppingDate || 'N/A'}
-                    </Badge>
-                  </div>
-                  <Card.Text className="text-muted small mb-0">{formatShoppingText()}</Card.Text>
                 </Card.Body>
               </Card>
             </Link>
