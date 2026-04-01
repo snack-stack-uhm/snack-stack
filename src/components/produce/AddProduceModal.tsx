@@ -553,7 +553,6 @@ export default function AddProduceModal({ show, onHide, produce }: AddProduceMod
                   isInvalid={!!errors.expiration}
                   {...register('expiration')}
                 />
-                <Form.Text className="text-muted">Format: YYYY-MM-DD</Form.Text>
                 <Form.Control.Feedback type="invalid">
                   {errors.expiration?.message as string}
                 </Form.Control.Feedback>
