@@ -139,7 +139,9 @@ export default function RecipeCard({
             <div className="mb-2">
               <Badge bg="light" text="dark">
                 {'Made By: '}
-                {displayOwner}
+                {Array.isArray(owner)
+                  ? owner.map(o => o.split('@')[0]).join(', ')
+                  : owner.split('@')[0]}
               </Badge>
             </div>
 
