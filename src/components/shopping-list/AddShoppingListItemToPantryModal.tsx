@@ -81,7 +81,7 @@ export default function AddShoppingListItemToPantryModal({
         setCustomUnit('');
       }
     })();
-  }, [show, owner, item?.id, item?.quantity]);
+  }, [show, owner, item?.id, item?.quantity, item?.type, item?.unit]);
 
   const validateQty = (raw: number) => {
     if (!Number.isFinite(raw) || raw < 1) return 'Quantity must be at least 1.';
