@@ -135,7 +135,7 @@ export async function addProduce(produce: {
           name: newProduce.name,
           quantity: newProduce.restockThreshold ?? 1,
           unit: newProduce.unit,
-          type: newProduce.type,
+          // type: newProduce.type,
           price: null,
         },
       });
@@ -271,7 +271,7 @@ export async function editProduce(
           name: updatedProduce.name,
           quantity: updatedProduce.restockThreshold ?? 1,
           unit: updatedProduce.unit,
-          type: updatedProduce.type,
+          // type: updatedProduce.type,
           price: null,
         },
       });
@@ -388,7 +388,7 @@ export async function addShoppingListItem(data: {
       name: data.name,
       quantity: data.quantity,
       unit: data.unit || '',
-      type: data.type || '',
+      // type: data.type || '',
       price: data.price ?? null,
       shoppingListId: data.shoppingListId,
     },
