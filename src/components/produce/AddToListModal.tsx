@@ -5,7 +5,7 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import swal from 'sweetalert';
 import '../../styles/buttons.css';
 
-type SL = { id: number; name: string };
+type ShoppingList = { id: number; name: string };
 
 type Props = {
   show: boolean;
@@ -16,7 +16,7 @@ type Props = {
   unit?: string | null;
 };
 
-export default function AddProduceToShoppingListModal({
+export default function AddToListModal({
   show,
   onHide,
   owner,
@@ -24,10 +24,15 @@ export default function AddProduceToShoppingListModal({
   quantity,
   unit,
 }: Props) {
-  const [lists, setLists] = useState<SL[]>([]);
+  const [lists, setLists] = useState<ShoppingList[]>([]);
   const [shoppingListId, setShoppingListId] = useState<number | ''>('');
   const [moveQty, setMoveQty] = useState<number>(quantity);
   const [saving, setSaving] = useState(false);
+
+  const getErrorMessage = (error: unknown) => {
+    if (error instanceof Error) return error.message;
+    return 'Failed to add item to shopping list';
+  };
 
   useEffect(() => {
     if (!show) return;
@@ -39,14 +44,36 @@ export default function AddProduceToShoppingListModal({
       const res = await fetch(`/api/shopping-list?owner=${encodeURIComponent(owner)}`);
       if (!res.ok) return;
 
-      const data = (await res.json()) as SL[];
-      setLists(data);
-      setShoppingListId(data[0]?.id ?? '');
+      const data: unknown = await res.json();
+      if (!Array.isArray(data)) {
+        setLists([]);
+        setShoppingListId('');
+        return;
+      }
+
+      const shoppingLists: ShoppingList[] = data
+        .filter(
+          (item): item is ShoppingList => typeof item === 'object'
+            && item !== null
+            && 'id' in item
+            && 'name' in item
+            && typeof item.id === 'number'
+            && typeof item.name === 'string',
+        )
+        .map((item) => ({ id: item.id, name: item.name }));
+
+      setLists(shoppingLists);
+      setShoppingListId(shoppingLists[0]?.id ?? '');
     })();
   }, [show, owner, quantity]);
 
   const handleAdd = async () => {
     if (!shoppingListId) return;
+
+    if (!Number.isFinite(moveQty) || moveQty <= 0) {
+      swal('Invalid quantity', 'Enter a quantity greater than 0', 'warning');
+      return;
+    }
 
     try {
       setSaving(true);
@@ -66,8 +93,8 @@ export default function AddProduceToShoppingListModal({
 
       swal('Added', `${itemName} added to your shopping list`, 'success', { timer: 2000 });
       onHide();
-    } catch (e: any) {
-      swal('Error', e?.message || 'Failed to add item to shopping list', 'error');
+    } catch (error: unknown) {
+      swal('Error', getErrorMessage(error), 'error');
     } finally {
       setSaving(false);
     }
@@ -84,13 +111,18 @@ export default function AddProduceToShoppingListModal({
       <Modal.Body>
         <div className="mb-2">
           Item:
-          <strong>{itemName}</strong>
+          <strong>
+            {itemName}
+          </strong>
         </div>
 
         <Form.Label className="mb-1">List</Form.Label>
         <Form.Select
           value={shoppingListId}
-          onChange={(e) => setShoppingListId(Number(e.target.value))}
+          onChange={(e) => {
+            const nextValue = e.target.value;
+            setShoppingListId(nextValue === '' ? '' : Number(nextValue));
+          }}
           disabled={lists.length === 0}
         >
           {lists.length === 0 ? (
@@ -104,12 +136,25 @@ export default function AddProduceToShoppingListModal({
           )}
         </Form.Select>
 
+        {lists.length === 0 && (
+          <div className="mt-2 small text-muted">
+            Create a shopping list first, then come back to add this item.
+            <div className="mt-2">
+              <Button as="a" href="/shopping-list" size="sm" className="btn-submit">
+                Go to shopping lists
+              </Button>
+            </div>
+          </div>
+        )}
+
         <Form.Label className="mb-1 mt-3">Quantity</Form.Label>
         <Form.Control
           type="number"
-          min={1}
+          min={0.01}
+          step="any"
+          placeholder="Enter amount (e.g. 0.5)"
           value={moveQty}
-          onChange={(e) => setMoveQty(Number(e.target.value))}
+          onChange={(e) => setMoveQty(e.target.valueAsNumber)}
         />
       </Modal.Body>
 
@@ -125,6 +170,6 @@ export default function AddProduceToShoppingListModal({
   );
 }
 
-AddProduceToShoppingListModal.defaultProps = {
+AddToListModal.defaultProps = {
   unit: null,
 };
