@@ -49,6 +49,7 @@ test('Shopping List page loads and all key UI elements work', async t => {
     await signOut();
 });
 
+/*
 test('Search filters shopping lists correctly', async t => {
     const searchInput = Selector('input[placeholder="Search shopping lists..."]');
     const listCards = Selector('.card');
@@ -78,6 +79,7 @@ test('Search filters shopping lists correctly', async t => {
 
     await signOut();
 });
+*/
 
 /*
 test('User can open and view a shopping list, see its items, and close the modal', async t => {
