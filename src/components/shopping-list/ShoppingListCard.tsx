@@ -28,12 +28,17 @@ export default function ShoppingListCard({ shoppingList, owner }: ShoppingListCa
   const [name, setName] = useState(shoppingList.name);
   const [tempName, setTempName] = useState(shoppingList.name);
 
-  const handleCancel = () => {
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleCancel = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     setTempName(name);
     setEditing(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     if (!tempName.trim()) return;
 
     await fetch(`/api/shopping-list/${shoppingList.id}`, {
@@ -46,9 +51,6 @@ export default function ShoppingListCard({ shoppingList, owner }: ShoppingListCa
     setEditing(false);
   };
 
-  const [showViewModal, setShowViewModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
   const totalItems = shoppingList.items?.length || 0;
 
   const totalCost = shoppingList.items?.reduce((sum: number, item: any) => {
@@ -57,95 +59,112 @@ export default function ShoppingListCard({ shoppingList, owner }: ShoppingListCa
   }, 0) || 0;
 
   return (
-    <Card className="h-100 mb-3 image-shadow">
-      <Card.Header
-        className="d-flex align-items-center"
-        style={{ height: '48px', paddingTop: '0px', paddingBottom: '0px' }}
+    <>
+      <Card
+        className="h-100 mb-3 image-shadow shopping-list-card"
+        role="button"
+        tabIndex={0}
+        onClick={() => setShowViewModal(true)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setShowViewModal(true);
+          }
+        }}
+        style={{ cursor: 'pointer' }}
       >
-        <Card.Title
+        <Card.Header
           className="d-flex align-items-center"
-          style={{ margin: 0, gap: '6px' }}
+          style={{ height: '48px', paddingTop: '0px', paddingBottom: '0px' }}
         >
-          {!editing ? (
-            <>
-              <span>{name}</span>
-              <FaPencilAlt
-                style={{
-                  cursor: 'pointer',
-                  fontSize: '0.9rem',
-                  position: 'relative',
-                  top: '-1px',
-                }}
-                onClick={() => setEditing(true)}
-              />
-            </>
-          ) : (
-            <div className="d-flex align-items-center" style={{ gap: '6px' }}>
-              <Form.Control
-                size="sm"
-                value={tempName}
-                onChange={(e) => setTempName(e.target.value)}
-                style={{ height: '28px', padding: '2px 6px' }}
-                autoFocus
-              />
-              <FaCheck
-                style={{
-                  cursor: 'pointer',
-                  color: 'green',
-                  position: 'relative',
-                  top: '-1px',
-                }}
-                onClick={handleSave}
-              />
-              <FaTimes
-                style={{
-                  cursor: 'pointer',
-                  color: 'red',
-                  position: 'relative',
-                  top: '-1px',
-                }}
-                onClick={handleCancel}
-              />
-            </div>
-          )}
-        </Card.Title>
-      </Card.Header>
+          <Card.Title
+            className="d-flex align-items-center"
+            style={{ margin: 0, gap: '6px' }}
+          >
+            {!editing ? (
+              <>
+                <span>{name}</span>
+                <FaPencilAlt
+                  style={{
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    position: 'relative',
+                    top: '-1px',
+                    zIndex: 2,
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditing(true);
+                  }}
+                />
+              </>
+            ) : (
+              <div
+                className="d-flex align-items-center"
+                style={{ gap: '6px', zIndex: 2 }}
+              >
+                <Form.Control
+                  size="sm"
+                  value={tempName}
+                  onChange={(e) => setTempName(e.target.value)}
+                  style={{ height: '28px', padding: '2px 6px' }}
+                  autoFocus
+                />
+                <FaCheck
+                  style={{
+                    cursor: 'pointer',
+                    color: 'green',
+                    position: 'relative',
+                    top: '-1px',
+                  }}
+                  onClick={handleSave}
+                />
+                <FaTimes
+                  style={{
+                    cursor: 'pointer',
+                    color: 'red',
+                    position: 'relative',
+                    top: '-1px',
+                  }}
+                  onClick={handleCancel}
+                />
+              </div>
+            )}
+          </Card.Title>
+        </Card.Header>
 
-      <Card.Body className="bg-light">
-        <ListGroup variant="flush">
-          <ListGroup.Item className="bg-light">
-            <strong>Date Created:</strong>
-            {' '}
-            {formatDate(shoppingList.createdAt)}
-          </ListGroup.Item>
-          <ListGroup.Item className="bg-light">
-            <strong>Total Items:</strong>
-            {' '}
-            <Badge bg="primary">{totalItems}</Badge>
-          </ListGroup.Item>
-          <ListGroup.Item className="bg-light">
-            <strong>Estimated Cost:</strong>
-            {' '}
-            $
-            {totalCost.toFixed(2)}
-          </ListGroup.Item>
-        </ListGroup>
-      </Card.Body>
+        <Card.Body className="bg-light">
+          <ListGroup variant="flush">
+            <ListGroup.Item className="bg-light">
+              <strong>Date Created: </strong>
+              {formatDate(shoppingList.createdAt)}
+            </ListGroup.Item>
+            <ListGroup.Item className="bg-light">
+              <strong>Total Items: </strong>
+              <Badge bg="primary">{totalItems}</Badge>
+            </ListGroup.Item>
+            <ListGroup.Item className="bg-light">
+              <strong>Estimated Cost: </strong>
+              $
+              {totalCost.toFixed(2)}
+            </ListGroup.Item>
+          </ListGroup>
+        </Card.Body>
 
-      <Card.Footer className="d-flex">
-        <Button className="me-2 editbutton" onClick={() => setShowViewModal(true)}>
-          View
-        </Button>
-
-        <Button
-          variant="danger"
-          className="d-flex align-items-center justify-content-center"
-          onClick={() => setShowDeleteModal(true)}
-          style={{ width: '40px', height: '40px', padding: 0 }}
-        >
-          <Trash color="white" size={18} />
-        </Button>
-      </Card.Footer>
+        <Card.Footer className="d-flex justify-content-end">
+          <Button
+            variant="danger"
+            className="d-flex align-items-center justify-content-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDeleteModal(true);
+            }}
+            style={{ width: '40px', height: '40px', padding: 0, zIndex: 2 }}
+          >
+            <Trash color="white" size={18} />
+          </Button>
+        </Card.Footer>
+      </Card>
 
       <ViewShoppingListModal
         show={showViewModal}
@@ -159,6 +178,6 @@ export default function ShoppingListCard({ shoppingList, owner }: ShoppingListCa
         onHide={() => setShowDeleteModal(false)}
         shoppingList={shoppingList}
       />
-    </Card>
+    </>
   );
 }
