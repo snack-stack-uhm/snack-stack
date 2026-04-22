@@ -178,6 +178,16 @@ footer a {
   display: none;
 }
 
+.shopping-list-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.shopping-list-card:hover,
+.shopping-list-card:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
 @media (max-width: 768px) {
   .produce-table-desktop {
     display: none;
