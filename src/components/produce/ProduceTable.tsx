@@ -20,7 +20,7 @@ const ProduceTable = ({ rows }: { rows: ProduceRelations[] }) => (
       >
         <thead>
           <tr>
-            <th>Name</th>
+            <th className="produce-name-column">Name</th>
             <th>Category</th>
             <th>Location</th>
             <th>Storage</th>

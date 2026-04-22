@@ -84,7 +84,7 @@ const ProduceItem = ({
         </div>
       ) : (
         <tr>
-          <td>{name}</td>
+          <td className="produce-name-column">{name}</td>
           <td>{typeLabel}</td>
           <td>{locationName}</td>
           <td>{storageName}</td>
