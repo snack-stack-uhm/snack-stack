@@ -178,6 +178,13 @@ footer a {
   display: none;
 }
 
+.produce-name-column {
+  text-align: left;
+  padding-left: 1rem !important;
+  min-width: 220px;
+  white-space: normal;
+}
+
 .shopping-list-card {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
