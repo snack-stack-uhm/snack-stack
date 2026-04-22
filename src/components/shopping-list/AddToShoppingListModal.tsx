@@ -70,7 +70,7 @@ export default function AddToShoppingListModal({
   );
 
   useEffect(() => {
-    if (!show) {
+    if (show) {
       reset({
         name: prefillName,
         quantity: 0,
@@ -278,14 +278,14 @@ export default function AddToShoppingListModal({
   );
 
   return !sidePanel ? (
-    <Modal show={show} onHide={onHide} centered size="lg">
+    <Modal show={show} onHide={handleClose} centered size="lg">
       <Modal.Header className="justify-content-center">
         <Modal.Title>Add Shopping List Item</Modal.Title>
       </Modal.Header>
       <Modal.Body>{formContent}</Modal.Body>
     </Modal>
   ) : (
-    <Offcanvas show={show} onHide={onHide} placement="end" backdrop={false}>
+    <Offcanvas show={show} onHide={handleClose} placement="end" backdrop={false}>
       <Offcanvas.Header closeButton>
         <Offcanvas.Title>Add Shopping List Item</Offcanvas.Title>
       </Offcanvas.Header>
