@@ -13,6 +13,8 @@ export async function DELETE(
   try {
     const session = await getServerSession();
     const email = session?.user?.email ?? null;
+    const role = (session?.user as { role?: string | null } | undefined)?.role;
+    const isAdmin = typeof role === 'string' && role.toUpperCase() === 'ADMIN';
 
     if (!email) {
       return NextResponse.json(
@@ -43,18 +45,7 @@ export async function DELETE(
       );
     }
 
-    const { owner: ownerField } = recipe;
-
-    // Normalize owner to an array
-    let owners: string[] = [];
-    if (Array.isArray(ownerField)) {
-      owners = ownerField;
-    } else if (typeof ownerField === 'string') {
-      owners = [ownerField];
-    }
-
-    const isAdmin = email === 'admin@foo.com';
-    const isOwner = owners.includes(email);
+    const isOwner = recipe.owner === email;
 
     if (!isAdmin && !isOwner) {
       return NextResponse.json(

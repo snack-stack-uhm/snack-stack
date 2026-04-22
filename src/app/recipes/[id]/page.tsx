@@ -32,7 +32,9 @@ export default async function RecipeDetailPage({ params }: PageProps) {
   // Create matcher for pantry
   const hasIngredient = createPantryMatcher(pantry.map((p) => p.name));
 
-  const displayOwner = recipe.owner?.includes('admin@foo.com') ? ['Snack Stack Team'] : recipe.owner;
+  const displayOwner = recipe.owner
+    ? recipe.owner.split('@')[0]
+    : 'Snack Stack Team';
 
   // Only use ingredientItems from the relation
   const ingredientItems = recipe.ingredientItems ?? [];

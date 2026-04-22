@@ -13,7 +13,8 @@ export default async function RecipeListPage() {
 
   const email = session?.user?.email ?? null;
   const canAdd = !!email; // anyone logged-in can add
-  const isAdmin = email === 'admin@foo.com'; // adjust if you have a real role system
+  const role = (session?.user as { role?: string | null } | undefined)?.role;
+  const isAdmin = typeof role === 'string' && role.toUpperCase() === 'ADMIN';
 
   let pantry: any[] = [];
   if (email) pantry = await getUserProduceByEmail(email);

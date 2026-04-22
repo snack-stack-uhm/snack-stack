@@ -26,7 +26,8 @@ export default function RecipesClient({
   const { data: session } = useSession();
 
   const currentUserEmail = (session?.user?.email ?? serverEmail) || null;
-  const isAdmin = serverIsAdmin || currentUserEmail === 'admin@foo.com';
+  const sessionRole = (session?.user as { role?: string | null } | undefined)?.role;
+  const isAdmin = serverIsAdmin || (typeof sessionRole === 'string' && sessionRole.toUpperCase() === 'ADMIN');
   const canAdd = serverCanAdd || !!currentUserEmail;
 
   const [showCanMake, setShowCanMake] = useState(false);
