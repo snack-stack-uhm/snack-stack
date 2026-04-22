@@ -154,7 +154,7 @@ export default function AddToListModal({
           step="any"
           placeholder="Enter amount (e.g. 0.5)"
           value={moveQty}
-          onChange={(e) => setMoveQty(e.target.valueAsNumber)}
+          onChange={(e) => setMoveQty(Number(e.currentTarget.value))}
         />
       </Modal.Body>
 
