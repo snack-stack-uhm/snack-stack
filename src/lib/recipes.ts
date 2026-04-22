@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 
 // Minimal shape so TS knows about session.user.email
 type SessionLike = {
-  user?: { email?: string | null } | null;
+  user?: { email?: string | null; role?: string | null } | null;
 } | null;
 
 export type IngredientItemInput = {
@@ -32,35 +32,78 @@ export type RecipeInput = {
   sourceUrl?: string;
 };
 
-/**
- * Normalize ingredientItems:
- * - trim names/units
- * - coerce quantity to number|null
- * - drop empty names
- */
+function hasAdminRole(role: string | null | undefined): boolean {
+  return typeof role === 'string' && role.toUpperCase() === 'ADMIN';
+}
+
 function normalizeIngredientItems(
-  input: RecipeInput,
-): IngredientItemInput[] {
-  const rawItems = input.ingredientItems ?? [];
+  rawItems?: IngredientItemInput[],
+): IngredientItemInput[] | undefined {
+  if (rawItems === undefined) return undefined;
 
-  return rawItems
-    .map((item, index) => {
-      const name = item.name.trim();
-      const unit = item.unit?.trim() || null;
+  return rawItems.flatMap((item, index) => {
+    if (!item || typeof item.name !== 'string') return [];
 
-      let quantity: number | null = null;
-      if (typeof item.quantity === 'number' && !Number.isNaN(item.quantity)) {
-        quantity = item.quantity;
-      }
+    const name = item.name.trim();
+    if (!name) return [];
 
-      return {
-        name,
-        quantity,
-        unit,
-        order: item.order ?? index,
-      };
-    })
-    .filter((item) => item.name.length > 0);
+    const unit = typeof item.unit === 'string' && item.unit.trim().length > 0
+      ? item.unit.trim()
+      : null;
+
+    const quantity = typeof item.quantity === 'number' && Number.isFinite(item.quantity)
+      ? item.quantity
+      : null;
+
+    const order = typeof item.order === 'number' && Number.isFinite(item.order)
+      ? item.order
+      : index;
+
+    return [{ name, quantity, unit, order }];
+  });
+}
+
+function mapIngredientItemsForCreate(items: IngredientItemInput[]) {
+  return items.map((item) => ({
+    name: item.name,
+    quantity: item.quantity ?? null,
+    unit: item.unit ?? null,
+    order: item.order ?? 0,
+  }));
+}
+
+function createIngredientsData(items: IngredientItemInput[] | undefined) {
+  if (!items || items.length === 0) return undefined;
+
+  return {
+    create: mapIngredientItemsForCreate(items),
+  };
+}
+
+function updateIngredientsData(
+  items: IngredientItemInput[] | undefined,
+): Prisma.RecipeUpdateInput['ingredientItems'] | undefined {
+  if (items === undefined) return undefined;
+
+  return {
+    deleteMany: {},
+    ...(items.length > 0 ? { create: mapIngredientItemsForCreate(items) } : {}),
+  };
+}
+
+function throwRecipeWriteError(error: unknown): never {
+  if (
+    error instanceof Prisma.PrismaClientKnownRequestError
+    && error.code === 'P2002'
+  ) {
+    throw new Error('You already have a recipe with that title. Please use a different title.');
+  }
+
+  if (error instanceof Error) {
+    throw error;
+  }
+
+  throw new Error('Unexpected error while saving recipe');
 }
 
 /** Normalize/clean recipe scalar data (no ingredients here). */
@@ -87,8 +130,9 @@ function normalizeRecipeInput(
   if (!recipeData.title) throw new Error('Title required');
   if (!recipeData.cuisine) throw new Error('Cuisine required');
 
-  // return both the scalar data and normalized items
-  const ingredientItems = normalizeIngredientItems(input);
+  // Undefined ingredientItems means "leave ingredients unchanged" for updates.
+  // Empty array means "clear all ingredients".
+  const ingredientItems = normalizeIngredientItems(input.ingredientItems);
 
   return { recipeData, ingredientItems };
 }
@@ -133,32 +177,20 @@ export async function createRecipe(input: RecipeInput) {
     const created = await prisma.recipe.create({
       data: {
         ...recipeData,
-        ingredientItems:
-          ingredientItems.length > 0
-            ? {
-              create: ingredientItems.map((item) => ({
-                name: item.name,
-                quantity: item.quantity ?? null,
-                unit: item.unit ?? null,
-                order: item.order ?? 0,
-              })),
-            }
-            : undefined,
+        ingredientItems: createIngredientsData(ingredientItems),
       },
     });
     return created;
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
-      throw new Error('You already have a recipe with that title. Please use a different title.');
-    }
-    throw e;
+  } catch (error) {
+    return throwRecipeWriteError(error);
   }
 }
 
-/** Update an existing recipe (owner or admin@foo.com only). */
+/** Update an existing recipe (owner or admin role only). */
 export async function updateRecipe(id: number, input: RecipeInput) {
   const session = (await getServerSession()) as SessionLike;
   const email = session?.user?.email ?? null;
+  const isAdmin = hasAdminRole(session?.user?.role);
   if (!email) throw new Error('Unauthorized');
 
   if (!Number.isFinite(id)) throw new Error('Invalid recipe id');
@@ -170,17 +202,7 @@ export async function updateRecipe(id: number, input: RecipeInput) {
 
   if (!existing) throw new Error('Recipe not found');
 
-  const ownerField = existing.owner as string | string[] | null;
-
-  let owners: string[] = [];
-  if (Array.isArray(ownerField)) {
-    owners = ownerField;
-  } else if (typeof ownerField === 'string') {
-    owners = [ownerField];
-  }
-
-  const isAdmin = email === 'admin@foo.com';
-  const isOwner = owners.includes(email);
+  const isOwner = existing.owner === email;
 
   if (!isAdmin && !isOwner) {
     throw new Error('Not authorized to edit this recipe');
@@ -191,37 +213,21 @@ export async function updateRecipe(id: number, input: RecipeInput) {
     /* ownerEmail */ undefined,
   );
 
-  // If ingredientItems is empty, we leave existing ingredient rows as-is.
-  // If ingredientItems has items, we replace them completely.
   try {
-    let updated;
-    if (ingredientItems.length === 0) {
-      updated = await prisma.recipe.update({
-        where: { id },
-        data: recipeData,
-      });
-    } else {
-      updated = await prisma.recipe.update({
-        where: { id },
-        data: {
-          ...recipeData,
-          ingredientItems: {
-            deleteMany: {}, // delete all existing rows for this recipe
-            create: ingredientItems.map((item) => ({
-              name: item.name,
-              quantity: item.quantity ?? null,
-              unit: item.unit ?? null,
-              order: item.order ?? 0,
-            })),
-          },
-        },
-      });
-    }
+    const ingredientItemsUpdate = updateIngredientsData(ingredientItems);
+
+    const updated = await prisma.recipe.update({
+      where: { id },
+      data: {
+        ...recipeData,
+        ...(ingredientItemsUpdate
+          ? { ingredientItems: ingredientItemsUpdate }
+          : {}),
+      },
+    });
+
     return updated;
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
-      throw new Error('You already have a recipe with that title. Please use a different title.');
-    }
-    throw e;
+  } catch (error) {
+    return throwRecipeWriteError(error);
   }
 }
